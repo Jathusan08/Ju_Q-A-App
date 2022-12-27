@@ -7,7 +7,7 @@ public class PostMapper {
 
 	
 	// convert Post entity to PostDto
-	public static PostDto mapTpPostDto(Post post) {
+	public static PostDto mapToPostDto(Post post) {
 		
 		PostDto postDto = PostDto.builder()
 				.id(post.getId())
@@ -23,7 +23,7 @@ public class PostMapper {
 	}
 	
 	// convert PostDto to Post entity
-	public static Post mapTpPost( PostDto postDto) {
+	public static Post mapToPost( PostDto postDto) {
 		
 		Post post = Post.builder()
 				.id(postDto.getId())
