@@ -7,6 +7,8 @@ import com.JU.QuestionAndAnswer_App.dto.PostDto;
 
 public interface PostService {
 	
-	List<PostDto> getAllPosts(); 
+	List<PostDto> getAllPosts();
+	
+	void createPost(PostDto postDto);
 
 }

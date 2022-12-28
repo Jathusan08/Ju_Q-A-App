@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"> 
+
+<!-- link expression to point to the external CSS file -->
+
+
+<div th:replace="common/Header :: header"></div>
+
+
+
+<body>
+
+<!-- NavBar -->
+<div th:replace="common/Header :: navbar"></div>
+<br/>
+
+	<div class="container">
+	
+		<div class="row col-md-8 offset-md-2">
+		
+			<div class="card">
+			
+				<div class="card-header">
+				
+					<h1 class="text-center">Create Post</h1>
+				
+				</div>
+				
+				<di v class="card-body">
+				
+					<!-- create form -->
+					
+					<form role="form" method="post" th:action="@{/admin/posts}" th:object="${newPost}">
+					
+						<div class="mb-3">
+						
+							<label class="form-label">Title:</label>
+							
+							<input type="text" 
+								   class="form-control" 
+								   id="title" 
+								   placeholder="Enter post title" 
+								   name="title" 
+								   th:field="*{title}"/>
+						
+						<!-- checking if title field has error -->
+							<p th:if="${#fields.hasErrors('title')}" class="text-danger"
+								th:errors="*{title}"></p>
+						
+						</div>
+						
+						<div class="mb-3">
+						
+							<label class="form-label">Short Description:</label>
+							
+							<textarea class="form-control" 
+									  id="shortDescription" 
+									  placeholder="Enter post short description" 
+									  rows="3"
+									  name="shortDescription"
+									  th:field="*{shortDescription}">
+						
+							</textarea>
+							
+								<!-- checking if title shortDescription has error -->
+							<p th:if="${#fields.hasErrors('shortDescription')}" class="text-danger"
+								th:errors="*{shortDescription}"></p>
+						
+						</div>
+					
+					
+							<div class="mb-3">
+						
+							<label class="form-label">Content:</label>
+							
+							<textarea class="form-control" 
+									  id="content" 
+									  placeholder="Enter post content" 
+									  rows="12"
+									  name="content"
+									  th:field="*{content}">
+						
+							</textarea>
+							
+								<!-- checking if title content has error -->
+							<p th:if="${#fields.hasErrors('content')}" class="text-danger"
+								th:errors="*{content}"></p>
+						
+						</div>
+					
+						<button type="submit" class="btn btn-primary">Submit</button>
+					
+					</form>
+				
+				</div>
+			
+			</div>
+		
+		
+		</div>
+	
+		
+	
+
+	
+<br/>
+<br/>
+<br/>
+<br/>
+
+	<!-- Footer   -->
+<div th:replace="common/footer :: footer"></div>
+	
+	
+<script src="https://code.jquery.com/jquery-3.6.3.min.js" 
+integrity="sha256-pvPw+upLPUjgMXY0G+8O0xUf+/Im1MZjXxxgOcBQBXU=" 
+ crossorigin="anonymous"></script>
+ 
+ <script src="https://cdn.ckeditor.com/ckeditor5/35.4.0/classic/ckeditor.js"></script>
+ 
+    <script>
+                        ClassicEditor
+                                .create( document.querySelector( '#content ' ) )
+                                .then( editor => {
+                                        console.log( editor );
+                                } )
+                                .catch( error => {
+                                        console.error( error );
+                                } );
+                </script> 
+ 
+
+</body>
+</html>

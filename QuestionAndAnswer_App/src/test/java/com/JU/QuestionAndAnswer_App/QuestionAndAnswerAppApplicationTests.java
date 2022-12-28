@@ -1,15 +1,26 @@
 package com.JU.QuestionAndAnswer_App;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertIterableEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import org.junit.jupiter.api.AfterEach; 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.MediaType;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.ModelAndViewAssert;
 import org.springframework.test.web.servlet.MockMvc;
@@ -17,12 +28,17 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.web.servlet.ModelAndView;
 
+
 import com.JU.QuestionAndAnswer_App.service.PostService;
 
 @TestPropertySource("/application-test.properties")// this will allow me to load properties during 
 @AutoConfigureMockMvc
 @SpringBootTest(classes=QuestionAndAnswerAppApplication.class)
 class QuestionAndAnswerAppApplicationTests {
+	
+	// private static MockHttpServletRequest request;
+	
+	private  MockHttpServletRequest request;
 
 	@Autowired
 	private PostService postService;
@@ -71,6 +87,18 @@ class QuestionAndAnswerAppApplicationTests {
 	
 	}
 	
+//	@BeforeAll() // this is a setup annotation that we can use it to run only for this test class method must be declared as static Also must be public and return void
+//	public static void setup() {
+//		request = new MockHttpServletRequest(); // this is object that we can use to make mock servlet request and I can populate this request 
+//												// with some data, so here we set up some parameters for firstname, lastname and email. This is
+//												// like a reusable object that we can make use of for sending request to a guven controller or 
+//												// endpoint
+//		request.setParameter("title", "Which Programming Lanagauge to learn for beginner?");
+//		request.setParameter("shortDescription", "Programming Lanagauge");
+//		request.setParameter("content", "I would like to know what Programming Lanagauge to learn for beginner?. Also can "
+//				+ "you kinldy send me a resource where I can able to start with it?");
+//	}
+	
 	
 	@Test
 	 void getPostHttpRequest() throws Exception{
@@ -90,5 +118,94 @@ class QuestionAndAnswerAppApplicationTests {
 		 ModelAndViewAssert.assertViewName(mav, "Posts_For_Admin");
 		
 	}
+	
+	@Test
+	 void showPostFormHttpRequest() throws Exception {
+		
+		
+		// Web related testing
+				 MvcResult mvcResult = this.mockMvc.perform(MockMvcRequestBuilders.get("/admin/posts/newPost"))
+			                .andExpect(status().isOk()).andReturn();
+				 
+				 // with MVC result i can get the results here to get the model and view
+				 ModelAndView mav = mvcResult.getModelAndView();
+				 
+				 // now I have the model and view we can perform some assets which is to test
+				 ModelAndViewAssert.assertViewName(mav, "Create_post_For_Admin");
+		
+		
+	}
+	
+	
+	@Test
+	 void createInvalidPostHttpRequest() throws Exception {
+		
+		
+		request = new MockHttpServletRequest(); // this is object that we can use to make mock servlet request and I can populate this request 
+//		// with some data, so here we set up some parameters for title, shortDescription and content. This is
+//		// like a reusable object that we can make use of for sending request to a guven controller or 
+//		// endpoint
+		
+	request.setParameter("title", "");
+	request.setParameter("shortDescription", "");
+	request.setParameter("content", "");
+		
+
+//		// create a post using an HTTP request and post data to a mapping on our controller and veorfy using DAO
+		MvcResult mvcResult = this.mockMvc.perform(post("/admin/posts")
+				  .contentType(MediaType.APPLICATION_JSON)
+				  .param("title", request.getParameterValues("title"))
+				  .param("shortDescription", request.getParameterValues("shortDescription"))
+				  .param("content", request.getParameterValues("content")))
+				.andExpect(status().isOk()).andReturn();
+				
+              
+		 // with MVC result i can get the results here to get the model and view
+		 ModelAndView mav = mvcResult.getModelAndView();
+		 
+		 // test to see
+		 ModelAndViewAssert.assertViewName(mav, "Create_post_For_Admin");
+		 
+
+	}
+	
+	@Test
+	 void createValidPostHttpRequest() throws Exception {
+		
+		
+		request = new MockHttpServletRequest(); // this is object that we can use to make mock servlet request and I can populate this request 
+//		// with some data, so here we set up some parameters for title, shortDescription and content. This is
+//		// like a reusable object that we can make use of for sending request to a guven controller or 
+//		// endpoint
+		
+		request.setParameter("title", "Which Programming Lanagauge to learn for beginner?");
+		request.setParameter("shortDescription", "Programming Lanagauge");
+		request.setParameter("content", "I would like to know what Programming Lanagauge to learn for beginner?. Also can "
+				+ "you kinldy send me a resource where I can able to start with it?");
+		
+
+//		// create a post using an HTTP request and post data to a mapping on our controller 
+		MvcResult mvcResult = this.mockMvc.perform(post("/admin/posts")
+				  .contentType(MediaType.APPLICATION_JSON)
+				  .param("title", request.getParameterValues("title"))
+				  .param("shortDescription", request.getParameterValues("shortDescription"))
+				  .param("content", request.getParameterValues("content")))
+				.andExpect(status().is3xxRedirection()).andReturn();
+				
+             
+		 // with MVC result i can get the results here to get the model and view
+		 ModelAndView mav = mvcResult.getModelAndView();
+		 
+		 // test to see
+		 ModelAndViewAssert.assertViewName(mav, "redirect:/admin/posts");
+		 
+		 
+		 // let check if the new post been added as we already have 3 posts already now we should 1 more
+		 
+			assertEquals(4, this.postService.getAllPosts().size());	
+		 
+
+	}
+	
 
 }

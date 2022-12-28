@@ -45,4 +45,14 @@ public class PostServiceImpl implements PostService {
 		return postDtos;
 	}
 
+	@Override
+	public void createPost(PostDto postDto) {
+		
+		// convert PostDto to Post entity 
+		Post newPost = PostMapper.mapToPost(postDto);
+		
+		this.productRepository.save(newPost);
+		
+	}
+
 }
