@@ -1,7 +1,8 @@
 package com.JU.QuestionAndAnswer_App.service;
 
-import java.util.ArrayList;
+import java.util.ArrayList; 
 import java.util.List;
+
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -14,22 +15,22 @@ import com.JU.QuestionAndAnswer_App.mapper.PostMapper;
 @Service
 public class PostServiceImpl implements PostService {
 	
-	private PostRepository productRepository;
+	private PostRepository postRepository;
 	
 	
 	public PostServiceImpl() {}
 	
 	@Autowired
-	public PostServiceImpl(PostRepository productRepository) { // injecting the dependency
+	public PostServiceImpl(PostRepository postRepository) { // injecting the dependency
 		
-		this.productRepository =  productRepository;
+		this.postRepository =  postRepository;
 		
 	}
 
 	@Override
 	public List<PostDto> getAllPosts() {
 	
-		List<Post> posts = this.productRepository.findAll();
+		List<Post> posts = this.postRepository.findAll();
 		
 		// convert list of post into list of PostDto.
 		
@@ -51,7 +52,29 @@ public class PostServiceImpl implements PostService {
 		// convert PostDto to Post entity 
 		Post newPost = PostMapper.mapToPost(postDto);
 		
-		this.productRepository.save(newPost);
+		this.postRepository.save(newPost);
+		
+	}
+
+	@Override
+	public PostDto findPostById(Long postId) {
+		
+		Post post = this.postRepository.findById(postId).get();
+		
+		//convert Post entity to PostDto 
+		
+		return PostMapper.mapToPostDto(post);
+			
+	
+	}
+
+	@Override
+	public void updatePost(PostDto postDto) {
+		
+		// convert PostDto to Post entity 
+		Post newPost = PostMapper.mapToPost(postDto);
+		
+		this.postRepository.save(newPost);
 		
 	}
 

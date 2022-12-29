@@ -4,16 +4,19 @@
 <!-- link expression to point to the external CSS file -->
 
 
-<div th:replace="common/Header :: header"></div>
+<div th:replace="~{common/Header :: header}"></div>
 
 
 
 <body>
 
-<!-- NavBar -->
-<div th:replace="common/Header :: navbar"></div>
 
-<div align = "center" style="margin-top:13px">
+
+<!-- NavBar -->
+<div th:replace="~{common/Header :: navbar}"></div>
+
+<div align = "center" style="margin-top:13px; overflow:scroll; 
+  padding-bottom: 5rem;">
 	
 	<div style = "border-style:solid; width:1100px">
 
@@ -42,13 +45,21 @@
 				
 				<tbody>
 				
-					<tr th:each ="post, questionStatus : ${ListOfPosts}">
+					<tr th:each ="post, questionStatus : ${post}">
 					
 						<td th:text="${questionStatus.count}">1</td>
 						<td th:text="${post.title}"> ?</td>
 						<td th:text="${post.shortDescription}">?</td>
 						<td th:text="${post.dateCreated}">?</td>
 						
+						<td>
+						
+							<a th:href="@{/admin/posts/{postId}/edit(postId=${post.id})}" class="btn btn-primary">Edit</a>
+						
+						</td>
+						
+					
+						 
 					</tr>	
 				
 				</tbody>
@@ -61,8 +72,9 @@
 	
 	</div>
 	
+	<hr>
 	<!-- Footer   -->
-<div th:replace="common/footer :: footer"></div>
+<div th:replace="~{common/footer :: footer}"></div>
 	
 	
 

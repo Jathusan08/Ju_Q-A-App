@@ -1,11 +1,12 @@
 package com.JU.QuestionAndAnswer_App.controller;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Autowired;  
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
 import com.JU.QuestionAndAnswer_App.dto.PostDto;
@@ -18,10 +19,7 @@ public class PostController {
 	
 	private PostService postService;
 	
-	public PostController() {
-		
-		
-	}
+	public PostController() {}
 	
 	@Autowired
 public PostController(PostService postService) {
@@ -36,7 +34,7 @@ public PostController(PostService postService) {
 	public String showAllPosts(Model model) {
 		
 		// get the list of posts and add to the model so we can use that attribute to populate the data
-		model.addAttribute("ListOfPosts", this.postService.getAllPosts());
+		model.addAttribute("post", this.postService.getAllPosts());
 		
 		return "Posts_For_Admin";
 	}
@@ -49,27 +47,30 @@ public PostController(PostService postService) {
 		// input to the object fields
 		PostDto postDto = new PostDto();
 		
-		model.addAttribute("newPost", postDto);
+		model.addAttribute("post", postDto);
 		
 		return "Create_post_For_Admin";
 	}
 	
 	// to handle form submit request
 	@PostMapping("/admin/posts")
-	public String createNewPost(@Valid @ModelAttribute("newPost")PostDto postDto, 
+	public String createNewPost(@Valid @ModelAttribute("post")PostDto postDto, 
 								BindingResult result, 
 								Model model) {
 		
 		// @Valid - To allow validation for PostDto Bean
 		
+	
+	//	System.out.println("postDto " + postDto.getShortDescription());
 		// BindingResult to check errors and return to UI
 			if(result.hasErrors()) {
 				
 				// if there is any errors then hasErrors() based on the validation annotation I set up on my PostDto class
 				
+				System.out.println("postDto " + postDto.getShortDescription());
 				
 				//i'm passing the same model object of the user input when there is error
-				model.addAttribute("newPost", postDto);
+				model.addAttribute("post", postDto);
 				
 				return "Create_post_For_Admin";
 			}
@@ -81,6 +82,61 @@ public PostController(PostService postService) {
 		
 		return "redirect:/admin/posts";
 	}
+	
+	
+	
+	
+	// direct to edit  post
+	@GetMapping("/admin/posts/{postId}/edit")
+	public String ShowEditPostForm(@PathVariable("postId") Long postId, Model model) {
+		
+
+		// let retrive the post if from the database
+		PostDto postDto = this.postService.findPostById(postId);
+		
+		model.addAttribute("post", postDto);
+		
+		System.out.println("POSTDT " + postDto);
+		
+		return "Edit_post_For_Admin";
+		
+	}
+	
+	// to handle edit form submit request
+	 @PostMapping("/admin/posts/{postId}")
+	    public String updatePost(@PathVariable("postId") Long postId,
+	                             @Valid @ModelAttribute("post") PostDto post,
+	                             BindingResult result,
+	                             Model model){
+		 String viewPage ="";
+		 
+	
+		 
+		 if((post.getContent().isEmpty() != true) && (post.getTitle().isEmpty() != true) && (post.getShortDescription().isEmpty() != true)) {
+			 
+			   post.setId(postId);
+		       this.postService.updatePost(post);
+		       
+		       viewPage= "redirect:/admin/posts";
+			 
+		 }
+		 
+		 
+		 else if(result.hasErrors()){
+	        	
+		
+			 post.setId(postId);
+	            model.addAttribute("post", post);
+	            
+	            
+	           //viewPage= "redirect:http://localhost:8080/admin/posts/"+postId+"/edit";
+	            viewPage= "Edit_post_For_Admin";
+	        }
+
+		 
+		 return viewPage;
+	     
+	    }
 
 	
 	// create post URL
@@ -96,4 +152,5 @@ public PostController(PostService postService) {
 		
 		
 	}
+	
 }

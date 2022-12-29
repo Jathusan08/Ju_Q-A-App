@@ -1,7 +1,8 @@
 package com.JU.QuestionAndAnswer_App;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;  
 import static org.junit.jupiter.api.Assertions.assertIterableEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -28,7 +29,7 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.web.servlet.ModelAndView;
 
-
+import com.JU.QuestionAndAnswer_App.dto.PostDto;
 import com.JU.QuestionAndAnswer_App.service.PostService;
 
 @TestPropertySource("/application-test.properties")// this will allow me to load properties during 
@@ -55,23 +56,20 @@ class QuestionAndAnswerAppApplicationTests {
 		
 
 		// insert sample data- we'll make use of JDBC template and execute JDBC operations
-	this.jdbc.execute("INSERT INTO posts (title, url, content, shortDescription, date_created)\n"
-			+ "VALUES ('Array?', 'https://www.mygreatlearning.com/blog/what-is-an-array-learn-more-in-one-read/', "
-			+ "'An array is a collection of similar data elements stored at contiguous memory locations. It is the simplest "
-			+ "data structure where each data element can be accessed directly by only using its index number.', "
-			+ "'need to research about arrays', NOW())");
+	this.jdbc.execute("INSERT INTO posts (post_id, title, url, content, shortDescription, date_created)\n"
+			+ "VALUES (1, 'What is ARRAY1?', 'What is ARRAY2?', 'What is ARRAY3?', 'What is ARRAY4?', NOW())");
 	
 	
-	this.jdbc.execute("INSERT INTO posts (title, url, content, shortDescription, date_created)\n"
-			+ "VALUES ('If Statement?', 'https://www.thinkautomation.com/eli5/a-beginners-guide-to-if-statements/', "
+	this.jdbc.execute("INSERT INTO posts (post_id,title, url, content, shortDescription, date_created)\n"
+			+ "VALUES (2, 'If Statement?', 'https://www.thinkautomation.com/eli5/a-beginners-guide-to-if-statements/', "
 			+ "'If statements are logical blocks used within programming. "
 			+ "They’re conditional statements that tell a computer what to do with certain information. "
 			+ "In other words, they let a program make decisions while it’s running.', "
 			+ "'need to refresh about If statement', NOW())");
 	
 	
-	this.jdbc.execute("INSERT INTO posts (title, url, content, shortDescription, date_created)\n"
-			+ "VALUES ('Do you write your unit tests before or after coding a piece of functionality?', "
+	this.jdbc.execute("INSERT INTO posts (post_id,title, url, content, shortDescription, date_created)\n"
+			+ "VALUES (3, 'Do you write your unit tests before or after coding a piece of functionality?', "
 			+ "'https://www.thinkautomation.com/eli5/a-beginners-guide-to-if-statements/', "
 			+ "'I was wondering when most people wrote their unit tests, if at all. I usually write tests after writing my "
 			+ "initial code to make sure it works like its supposed to. I then fix what is broken.', "
@@ -101,7 +99,7 @@ class QuestionAndAnswerAppApplicationTests {
 	
 	
 	@Test
-	 void getPostHttpRequest() throws Exception{
+	 void showAllPostsHttpRequest() throws Exception{
 		
 		// we should have 3 data on H2 Embeded database
 		
@@ -203,9 +201,118 @@ class QuestionAndAnswerAppApplicationTests {
 		 // let check if the new post been added as we already have 3 posts already now we should 1 more
 		 
 			assertEquals(4, this.postService.getAllPosts().size());	
-		 
 
 	}
+	
+	@Test
+	 void showEditPostFormHttpRequest() throws Exception {
+		
+		int i = 1;
+		Long id =Long.valueOf( i);
+		
+		this.postService.findPostById(id).getId();
+		
+		// test if Id 1 exist
+		 assertEquals(1,this.postService.findPostById(id).getId());
+		
+		// perform HTTP request - /admin/posts/{postId}/edit
+				 MvcResult mvcResult = this.mockMvc.perform(MockMvcRequestBuilders.get("/admin/posts/{postId}/edit",1))
+						  .andExpect(status().isOk()).andReturn();
+				 
+				// with MVC result i can get the results here to get the model and view
+				 ModelAndView mav = mvcResult.getModelAndView();
+				 
+				 ModelAndViewAssert.assertViewName(mav, "Edit_post_For_Admin"); 
+		
+	}
+	
+	
+	@Test
+	 void EditValidPostFormHttpRequest() throws Exception {
+		
+		int i = 1;
+		Long id =Long.valueOf( i);
+		
+		this.postService.findPostById(id).getId();
+		
+		// test if Id 1 exist
+		 assertEquals(1,this.postService.findPostById(id).getId());
+		
+		// perform HTTP request - /admin/posts/{postId}/edit
+				 MvcResult mvcResult = this.mockMvc.perform(MockMvcRequestBuilders.post("/admin/posts/{postId}",1)
+						  .contentType(MediaType.APPLICATION_JSON)
+						  .param("title", "What is OOP1?")
+						  .param("shortDescription", "What is OOP2?")
+						  .param("content", "What is OOP3?"))
+						 .andExpect(status().is3xxRedirection()).andReturn();
+				 
+				// with MVC result i can get the results here to get the model and view
+				 ModelAndView mav = mvcResult.getModelAndView();
+				 
+				 ModelAndViewAssert.assertViewName(mav, "redirect:/admin/posts"); 
+				 
+				 // now let see if the content changed
+				 assertEquals("What is OOP1?",this.postService.findPostById(id).getTitle());
+				 assertEquals("What is OOP2?",this.postService.findPostById(id).getShortDescription());
+				 assertEquals("What is OOP3?",this.postService.findPostById(id).getContent());
+		
+	}
+	
+	@Test
+	 void EditInValidPostFormHttpRequest() throws Exception {
+		
+		int i = 1;
+		Long id =Long.valueOf( i);
+		
+		this.postService.findPostById(id).getId();
+		
+		// test if Id 1 exist
+		 assertEquals(1,this.postService.findPostById(id).getId());
+		
+		// perform HTTP request - /admin/posts/{postId}/edit
+				 MvcResult mvcResult = this.mockMvc.perform(MockMvcRequestBuilders.post("/admin/posts/{postId}",1)
+						  .contentType(MediaType.APPLICATION_JSON)
+						  .param("title", "")
+						  .param("shortDescription", "")
+						  .param("content", ""))
+						 .andExpect(status().isOk()).andReturn();
+				 
+				// with MVC result i can get the results here to get the model and view
+				 ModelAndView mav = mvcResult.getModelAndView();
+				 
+				 ModelAndViewAssert.assertViewName(mav, "Edit_post_For_Admin"); 
+				 
+				 // now let see if the content changed , it shoudldnt as given empty string
+				 assertEquals("What is ARRAY1?",this.postService.findPostById(id).getTitle());
+				 assertEquals("What is ARRAY3?",this.postService.findPostById(id).getContent());
+				 assertEquals("What is ARRAY4?", this.postService.findPostById(id).getShortDescription());
+				
+	}
+	
+	@Test
+	 void UpdatePostFormHttpRequest() throws Exception {
+		
+		
+		int i = 1;
+		Long id =Long.valueOf(i);
+		
+		PostDto postDto = this.postService.findPostById(id);
+		
+		postDto.setTitle("What is OOP1?");
+		postDto.setShortDescription("What is OOP2?");
+		postDto.setContent("What is OOP3?");
+		
+		this.postService.updatePost(postDto);
+		
+		
+		// test to see if the update is succesfull
+		 assertEquals("What is OOP1?",this.postService.findPostById(id).getTitle());
+		 assertEquals("What is OOP2?",this.postService.findPostById(id).getShortDescription());
+		 assertEquals("What is OOP3?", this.postService.findPostById(id).getContent());
+		
+		
+	}
+	
 	
 
 }

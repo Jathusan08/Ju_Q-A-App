@@ -14,6 +14,7 @@
 <div th:replace="~{common/Header :: navbar}"></div>
 <br/>
 
+
 	
 		<div class="row col-md-8 offset-md-2">
 		
@@ -21,7 +22,7 @@
 			
 				<div class="card-header">
 				
-					<h1 class="text-center">Create Post</h1>
+					<h1 class="text-center">Edit Post</h1>
 				
 				</div>
 				
@@ -29,12 +30,18 @@
 				
 					<!-- create form -->
 					
-					<form role="form" method="post" th:action="@{/admin/posts}" th:object="${post}">
+					<form role="form" method="post" th:action="@{/admin/posts/{postId}(postId=${post.id})}" th:object="${post}">
+					
+					<!-- we need to use the id, URL and dateCreated but don't want to show to the user as they can modify,
+					 instead in going to hide the post ID, URL and dateCreated -->
+						
+		
+						 <input type="hidden" th:field="*{url}"/>
+						  <input type="hidden" th:field="*{dateCreated}"/>
 					
 						<div class="mb-3">
 						
 							<label class="form-label">Title:</label>
-							
 							<input type="text" 
 								   class="form-control" 
 								   id="title" 
