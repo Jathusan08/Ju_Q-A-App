@@ -324,7 +324,6 @@ class QuestionAndAnswerAppApplicationTests {
 		int i = 1;
 		Long id =Long.valueOf(i);
 		
-		PostDto postDto = this.postService.findPostById(id);
 		
 		// Delete the grade via HTTP request 
 		 MvcResult mvcResult = this.mockMvc.perform(MockMvcRequestBuilders.get("/admin/posts/{postId}/delete",id))
@@ -342,6 +341,30 @@ class QuestionAndAnswerAppApplicationTests {
 
 	}
 	
+	
+	@Test 
+	 void viewPostFormHttpRequest() throws Exception {
+		
+		int i = 1;
+		Long id =Long.valueOf(i);
+		
+	//	String url = this.postService.findPostById(id).getUrl();
+		
+	//	System.out.println("url: " + url);
+		
+	//	assertEquals(url,this.postService.findPostById(id).getUrl());
+		
+	 MvcResult mvcResult = this.mockMvc.perform(MockMvcRequestBuilders.get("/admin/posts/{postUrl}/view",this.postService.findPostById(id).getUrl()))
+			 .andExpect(status().isOk()).andReturn();
+	 
+	 // with MVC result i can get the results here to get the model and view
+	 ModelAndView mav = mvcResult.getModelAndView();
+ 
+//	// now I have the model and view we can perform some assets which is to test
+	 ModelAndViewAssert.assertViewName(mav, "View_post_For_Admin");
+		
+		
+	}
 	
 
 }

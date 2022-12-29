@@ -2,7 +2,7 @@ package com.JU.QuestionAndAnswer_App.service;
 
 import java.util.ArrayList; 
 import java.util.List;
-
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -83,6 +83,18 @@ public class PostServiceImpl implements PostService {
 		
 		// now delete
 		this.postRepository.deleteById(postId);
+		
+	
+		
+	}
+
+	@Override
+	public PostDto findPostByUrl(String postUrl) {
+	
+		Post post = this.postRepository.findByUrl(postUrl).get();
+		
+		// convert PostDto to Post entity 
+		return PostMapper.mapToPostDto(post);
 		
 	}
 

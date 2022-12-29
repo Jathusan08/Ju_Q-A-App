@@ -15,6 +15,8 @@
 <!-- NavBar -->
 <div th:replace="~{common/Header :: navbar}"></div>
 
+
+
 <div align = "center" style="margin-top:13px; overflow:scroll; 
   padding-bottom: 5rem;">
 	
@@ -34,20 +36,20 @@
 				<thead class="table-dark">
 				
 					<tr>				
-					   <th style="width:20%">#</th>
-					   <th style="width:20%">Question Title</th>
-					   <th style="width:20%">Question Short Description</th>
-					   <th style="width:20%">Question Date Created</th>
-					   <th style="width:20%">Actions</th>
+					
+					   <th style="width:25%">Question Title</th>
+					   <th style="width:25%">Question Short Description</th>
+					   <th style="width:14%">Question Date Created</th>
+					   <th style="width:16%">Actions</th>
 					</tr>	
 				
 				</thead>
 				
 				<tbody>
 				
-					<tr th:each ="post, questionStatus : ${post}">
+					<tr th:each ="post : ${post}">
 					
-						<td th:text="${questionStatus.count}">1</td>
+						
 						<td th:text="${post.title}"> ?</td>
 						<td th:text="${post.shortDescription}">?</td>
 						<td th:text="${post.dateCreated}">?</td>
@@ -55,7 +57,13 @@
 						<td>
 						
 							<a th:href="@{/admin/posts/{postId}/edit(postId=${post.id})}" class="btn btn-primary">Edit</a>
-							<a th:href="@{/admin/posts/{postId}/delete(postId=${post.id})}" class="btn btn-danger">Delete</a>
+							
+							<a data-toggle="modal" data-target="#modal-warning" th:attr="data-target='#modal-warning'+${post.id}" th:href="@{/admin/posts/{postId}/delete(postId=${post.id})}" class="btn btn-danger" >
+							<span class="glyphicon glyphicon-trash"></span>
+							Delete
+							</a>
+							
+							<a th:href="@{/admin/posts/{postUrl}/view(postUrl=${post.url})}" class="btn btn-info">View</a>
 						
 						</td>
 						

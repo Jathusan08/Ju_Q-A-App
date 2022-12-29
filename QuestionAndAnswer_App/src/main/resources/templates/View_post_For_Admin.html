@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"> 
+
+<!-- link expression to point to the external CSS file -->
+
+
+<div th:replace="~{common/Header :: header}"></div>
+
+
+
+<body>
+
+<!-- NavBar -->
+<div th:replace="~{common/Header :: navbar}"></div>
+<br/>
+
+
+		<div class="container" style = "border-style:solid; width:1100px">
+		
+			<div class="row">
+			
+				<div class="col-md-8 offset-md-2">
+				
+					<h1 align = "center" th:text="${post.title}"></h1>
+					
+					<hr/>
+					
+					<h3 th:text="${post.shortDescription}"></h3>
+					
+					<hr/>
+					
+					<div th:utext="${post.content}">	
+					
+					</div>
+					
+					
+				
+				</div>
+			
+			</div>
+			
+		
+		
+		</div>
+	
+	
+	
+<br/>
+<br/>
+<br/>
+<br/>
+
+	<!-- Footer   -->
+<div th:replace="~{common/footer :: footer}"></div>
+	
+	
+</body>
+</html>

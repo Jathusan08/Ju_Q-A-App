@@ -115,8 +115,17 @@ public PostController(PostService postService) {
 		 
 		 if((post.getContent().isEmpty() != true) && (post.getTitle().isEmpty() != true) && (post.getShortDescription().isEmpty() != true)) {
 			 
+			 PostDto postDto = this.postService.findPostById(postId);
+			 
 			   post.setId(postId);
+			   post.setDateCreated(postDto.getDateCreated());			   
+			   this.postService.findPostById(postId);
+			   
+			   System.out.println("date created " + post.getDateCreated());
+			   
 		       this.postService.updatePost(post);
+		       
+		       
 		       
 		       viewPage= "redirect:/admin/posts";
 			 
@@ -148,6 +157,20 @@ public PostController(PostService postService) {
 			this.postService.deletePost(postId);
 			
 			return "redirect:/admin/posts";
+			
+		}
+		
+		
+		// direct to view  post
+		@GetMapping("/admin/posts/{postUrl}/view")
+		public String viewPostForm(@PathVariable("postUrl") String postUrl, Model model) {
+			
+			// retrieve postDto object
+			PostDto postDto  = this.postService.findPostByUrl(postUrl);
+			
+			model.addAttribute("post", postDto); 
+			
+			return "View_post_For_Admin";
 			
 		}
 
