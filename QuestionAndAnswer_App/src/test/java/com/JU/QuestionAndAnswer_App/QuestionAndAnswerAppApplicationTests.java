@@ -1,9 +1,11 @@
 package com.JU.QuestionAndAnswer_App;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;  
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertIterableEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -11,6 +13,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
@@ -28,6 +31,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.web.servlet.ModelAndView;
+
 
 import com.JU.QuestionAndAnswer_App.dto.PostDto;
 import com.JU.QuestionAndAnswer_App.service.PostService;
@@ -228,7 +232,7 @@ class QuestionAndAnswerAppApplicationTests {
 	
 	
 	@Test
-	 void EditValidPostFormHttpRequest() throws Exception {
+	 void editValidPostFormHttpRequest() throws Exception {
 		
 		int i = 1;
 		Long id =Long.valueOf( i);
@@ -259,7 +263,7 @@ class QuestionAndAnswerAppApplicationTests {
 	}
 	
 	@Test
-	 void EditInValidPostFormHttpRequest() throws Exception {
+	 void editInValidPostFormHttpRequest() throws Exception {
 		
 		int i = 1;
 		Long id =Long.valueOf( i);
@@ -290,7 +294,7 @@ class QuestionAndAnswerAppApplicationTests {
 	}
 	
 	@Test
-	 void UpdatePostFormHttpRequest() throws Exception {
+	 void updatePostFormHttpRequest() throws Exception {
 		
 		
 		int i = 1;
@@ -311,6 +315,31 @@ class QuestionAndAnswerAppApplicationTests {
 		 assertEquals("What is OOP3?", this.postService.findPostById(id).getContent());
 		
 		
+	}
+	
+	
+	@Test 
+	 void deletePostFormHttpRequest() throws Exception {
+		
+		int i = 1;
+		Long id =Long.valueOf(i);
+		
+		PostDto postDto = this.postService.findPostById(id);
+		
+		// Delete the grade via HTTP request 
+		 MvcResult mvcResult = this.mockMvc.perform(MockMvcRequestBuilders.get("/admin/posts/{postId}/delete",id))
+				 .andExpect(status().is3xxRedirection()).andReturn();
+		 
+		 // with MVC result i can get the results here to get the model and view
+		 ModelAndView mav = mvcResult.getModelAndView();
+	 
+//		// now I have the model and view we can perform some assets which is to test
+		 ModelAndViewAssert.assertViewName(mav, "redirect:/admin/posts"); // the grade we passed is invalid as it does not exist so it should return to 'error' view page insteaed
+		 
+//		 // now we should not have id 2 question blog in our H2 database as we have deleted 1 already
+		 
+		 assertEquals(2, this.postService.getAllPosts().size());
+
 	}
 	
 	

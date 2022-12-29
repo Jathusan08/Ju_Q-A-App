@@ -72,9 +72,17 @@ public class PostServiceImpl implements PostService {
 	public void updatePost(PostDto postDto) {
 		
 		// convert PostDto to Post entity 
-		Post newPost = PostMapper.mapToPost(postDto);
+		Post updatePost = PostMapper.mapToPost(postDto);
 		
-		this.postRepository.save(newPost);
+		this.postRepository.save(updatePost);
+		
+	}
+
+	@Override
+	public void deletePost(Long postId) {
+		
+		// now delete
+		this.postRepository.deleteById(postId);
 		
 	}
 

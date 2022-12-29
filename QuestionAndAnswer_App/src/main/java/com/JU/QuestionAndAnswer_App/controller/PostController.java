@@ -88,9 +88,10 @@ public PostController(PostService postService) {
 	
 	// direct to edit  post
 	@GetMapping("/admin/posts/{postId}/edit")
-	public String ShowEditPostForm(@PathVariable("postId") Long postId, Model model) {
+	public String showEditPostForm(@PathVariable("postId") Long postId, Model model) {
 		
-
+		// @PathVariable will get the postId value from ULR
+		
 		// let retrive the post if from the database
 		PostDto postDto = this.postService.findPostById(postId);
 		
@@ -137,6 +138,18 @@ public PostController(PostService postService) {
 		 return viewPage;
 	     
 	    }
+	 
+		// direct to edit  post
+		@GetMapping("/admin/posts/{postId}/delete")
+		public String deletePostForm(@PathVariable("postId") Long postId) {
+			
+		// delete 
+			
+			this.postService.deletePost(postId);
+			
+			return "redirect:/admin/posts";
+			
+		}
 
 	
 	// create post URL
