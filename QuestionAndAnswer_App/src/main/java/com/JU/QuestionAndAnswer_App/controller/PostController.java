@@ -1,5 +1,7 @@
 package com.JU.QuestionAndAnswer_App.controller;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;  
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -8,6 +10,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import com.JU.QuestionAndAnswer_App.dto.PostDto;
 import com.JU.QuestionAndAnswer_App.service.PostService;
@@ -173,7 +176,18 @@ public PostController(PostService postService) {
 			return "View_post_For_Admin";
 			
 		}
-
+		
+		// localhost:8080/admin/posts/search?query=java
+		@GetMapping("/admin/posts/search")
+		public String searchPosts(@RequestParam(value = "query") String query, Model model) {
+			
+			
+			List<PostDto> posts = this.postService.searchPosts(query);
+			
+			model.addAttribute("post", posts);
+			
+			return "Posts_For_Admin";
+		}
 	
 	// create post URL
 	private static String getUrl(String postTitle) {

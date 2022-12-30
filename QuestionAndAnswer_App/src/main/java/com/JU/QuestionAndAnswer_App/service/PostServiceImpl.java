@@ -98,4 +98,19 @@ public class PostServiceImpl implements PostService {
 		
 	}
 
+	@Override
+	public List<PostDto> searchPosts(String query) {
+		// TODO Auto-generated method stub
+		List<Post> posts = this.postRepository.searchPosts(query);
+		
+		List<PostDto> postDtos = new ArrayList<>();
+		
+		for(Post post: posts) {
+			
+			postDtos.add(PostMapper.mapToPostDto(post));
+		}
+		
+		return postDtos;
+	}
+
 }

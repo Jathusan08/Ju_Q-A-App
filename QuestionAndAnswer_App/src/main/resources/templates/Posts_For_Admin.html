@@ -30,6 +30,39 @@
 			<h1>List of Question Posts</h1>
 			
 		</div>
+		
+		<!-- search bar -->
+		
+			<div class="row">
+			
+				<div class="col-md-5">
+				
+					<div class="form-group">
+					
+							<form class="form-inline" th:action="@{/admin/posts/search}">
+							
+							
+								<div class="input-group">
+								
+									<input type="text" class="form-control" name="query" />
+									
+									<span class="input-group-btn">
+									
+										<button class="btn btn-primary" type="submit">Search</button>
+									
+									</span>
+								
+								</div>
+							
+							</form>
+					
+					</div>
+				
+				</div>
+			
+			</div>
+			
+			<br>
 			
 			<table class="table table-striped table-hover table-bordered">
 			

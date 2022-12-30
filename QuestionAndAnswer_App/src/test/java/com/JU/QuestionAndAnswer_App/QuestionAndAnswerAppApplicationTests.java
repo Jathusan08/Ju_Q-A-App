@@ -366,5 +366,20 @@ class QuestionAndAnswerAppApplicationTests {
 		
 	}
 	
+	
+	@Test 
+	 void searchPostFormHttpRequest() throws Exception {
+		
+		 MvcResult mvcResult = this.mockMvc.perform(MockMvcRequestBuilders.get("/admin/posts/search?query={query}","S"))
+				 .andExpect(status().isOk()).andReturn();
+		 
+		 // with MVC result i can get the results here to get the model and view
+		 ModelAndView mav = mvcResult.getModelAndView();
+	 
+//		// now I have the model and view we can perform some assets which is to test
+		 ModelAndViewAssert.assertViewName(mav, "Posts_For_Admin");
+		
+		
+	}
 
 }
