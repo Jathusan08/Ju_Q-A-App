@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"> 
+
+<!-- link expression to point to the external CSS file -->
+
+
+<div th:replace="~{QA/Header :: header}"></div>
+
+
+
+<body>
+
+
+<!-- NavBar -->
+<div th:replace="~{QA/Header :: navbar}"></div>
+<br />
+	
+ <div class="container">
+ 
+ 	<div class="row">
+ 			<!--  main content to show -->
+ 			<div class="col-md-9">
+ 			
+ 				<div th:each = "post: ${QAposts}">
+ 				
+ 					<div class="card">
+ 					
+ 						<div class="card-header">
+ 						
+ 							<h2>
+ 							
+ 								<a th:href="@{/post/{postUrl}(postUrl=${post.url})}"
+ 									th:text="${post.title}"></a>
+ 							
+ 							</h2>
+ 							
+ 									<div>
+ 									
+ 										<strong th:text="${#dates.format(post.dateCreated, 'dd-MMM-yyyy')}">
+ 										
+ 										</strong>
+ 									
+ 									</div>
+ 						
+ 						</div>
+ 						
+ 							<div class="card-body">
+ 							
+ 								<span th:utext="${post.shortDescription}"></span>
+ 								
+ 								<a th:href="@{/post/{postUrl}(postUrl=${post.url})}">Read more</a>
+ 							
+ 							</div>
+ 					
+ 					</div>
+ 					
+ 					<br/>
+ 					
+ 				</div>
+ 			
+ 			</div>
+ 			
+ 			<!--  Search Button to show -->
+ 			<div class="col-md-3">
+ 			
+ 					<div th:replace="~{QA/Search :: Search}"></div>
+ 			
+ 			</div>
+ 	
+ 	</div>
+ 
+ </div>
+
+	<!-- Footer   -->
+<div th:replace="~{QA/footer :: footer}"></div>
+	
+	
+
+
+</body>
+</html>

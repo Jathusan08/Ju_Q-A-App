@@ -4,7 +4,7 @@
 <!-- link expression to point to the external CSS file -->
 
 
-<div th:replace="~{common/Header :: header}"></div>
+<div th:replace="~{Admin/Header :: header}"></div>
 
 
 
@@ -13,7 +13,7 @@
 
 
 <!-- NavBar -->
-<div th:replace="~{common/Header :: navbar}"></div>
+<div th:replace="~{Admin/Header :: navbar}"></div>
 
 
 
@@ -85,7 +85,7 @@
 						
 						<td th:text="${post.title}"> ?</td>
 						<td th:text="${post.shortDescription}">?</td>
-						<td th:text="${post.dateCreated}">?</td>
+						<td th:text="${#dates.format(post.dateCreated, 'dd-MMM-yyyy')}">?</td>
 						
 						<td>
 						
@@ -116,7 +116,7 @@
 	
 	<hr>
 	<!-- Footer   -->
-<div th:replace="~{common/footer :: footer}"></div>
+<div th:replace="~{Admin/footer :: footer}"></div>
 	
 	
 

@@ -39,7 +39,9 @@ public PostController(PostService postService) {
 		// get the list of posts and add to the model so we can use that attribute to populate the data
 		model.addAttribute("post", this.postService.getAllPosts());
 		
-		return "Posts_For_Admin";
+	
+		
+		return "Admin/Posts_For_Admin";
 	}
 	
 	// direct to add new post
@@ -52,7 +54,7 @@ public PostController(PostService postService) {
 		
 		model.addAttribute("post", postDto);
 		
-		return "Create_post_For_Admin";
+		return "Admin/Create_post_For_Admin";
 	}
 	
 	// to handle form submit request
@@ -75,7 +77,7 @@ public PostController(PostService postService) {
 				//i'm passing the same model object of the user input when there is error
 				model.addAttribute("post", postDto);
 				
-				return "Create_post_For_Admin";
+				return "Admin/Create_post_For_Admin";
 			}
 		
 		postDto.setUrl(getUrl(postDto.getTitle()));
@@ -102,7 +104,7 @@ public PostController(PostService postService) {
 		
 		System.out.println("POSTDT " + postDto);
 		
-		return "Edit_post_For_Admin";
+		return "Admin/Edit_post_For_Admin";
 		
 	}
 	
@@ -143,7 +145,7 @@ public PostController(PostService postService) {
 	            
 	            
 	           //viewPage= "redirect:http://localhost:8080/admin/posts/"+postId+"/edit";
-	            viewPage= "Edit_post_For_Admin";
+	            viewPage= "Admin/Edit_post_For_Admin";
 	        }
 
 		 
@@ -173,7 +175,7 @@ public PostController(PostService postService) {
 			
 			model.addAttribute("post", postDto); 
 			
-			return "View_post_For_Admin";
+			return "Admin/View_post_For_Admin";
 			
 		}
 		
@@ -186,7 +188,7 @@ public PostController(PostService postService) {
 			
 			model.addAttribute("post", posts);
 			
-			return "Posts_For_Admin";
+			return "Admin/Posts_For_Admin";
 		}
 	
 	// create post URL
@@ -202,5 +204,7 @@ public PostController(PostService postService) {
 		
 		
 	}
+	
+
 	
 }

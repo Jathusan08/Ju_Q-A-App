@@ -103,7 +103,7 @@ class QuestionAndAnswerAppApplicationTests {
 	
 	
 	@Test
-	 void showAllPostsHttpRequest() throws Exception{
+	 void showAllPostsForAdminHttpRequest() throws Exception{
 		
 		// we should have 3 data on H2 Embeded database
 		
@@ -117,12 +117,12 @@ class QuestionAndAnswerAppApplicationTests {
 		 ModelAndView mav = mvcResult.getModelAndView();
 		 
 		 // now I have the model and view we can perform some assets which is to test
-		 ModelAndViewAssert.assertViewName(mav, "Posts_For_Admin");
+		 ModelAndViewAssert.assertViewName(mav, "Admin/Posts_For_Admin");
 		
 	}
 	
 	@Test
-	 void showPostFormHttpRequest() throws Exception {
+	 void showPostFormForAdminHttpRequest() throws Exception {
 		
 		
 		// Web related testing
@@ -133,14 +133,14 @@ class QuestionAndAnswerAppApplicationTests {
 				 ModelAndView mav = mvcResult.getModelAndView();
 				 
 				 // now I have the model and view we can perform some assets which is to test
-				 ModelAndViewAssert.assertViewName(mav, "Create_post_For_Admin");
+				 ModelAndViewAssert.assertViewName(mav, "Admin/Create_post_For_Admin");
 		
 		
 	}
 	
 	
 	@Test
-	 void createInvalidPostHttpRequest() throws Exception {
+	 void createInvalidPostForAdminHttpRequest() throws Exception {
 		
 		
 		request = new MockHttpServletRequest(); // this is object that we can use to make mock servlet request and I can populate this request 
@@ -166,13 +166,13 @@ class QuestionAndAnswerAppApplicationTests {
 		 ModelAndView mav = mvcResult.getModelAndView();
 		 
 		 // test to see
-		 ModelAndViewAssert.assertViewName(mav, "Create_post_For_Admin");
+		 ModelAndViewAssert.assertViewName(mav, "Admin/Create_post_For_Admin");
 		 
 
 	}
 	
 	@Test
-	 void createValidPostHttpRequest() throws Exception {
+	 void createValidPostForAdminHttpRequest() throws Exception {
 		
 		
 		request = new MockHttpServletRequest(); // this is object that we can use to make mock servlet request and I can populate this request 
@@ -209,7 +209,7 @@ class QuestionAndAnswerAppApplicationTests {
 	}
 	
 	@Test
-	 void showEditPostFormHttpRequest() throws Exception {
+	 void showEditPostFormForAdminHttpRequest() throws Exception {
 		
 		int i = 1;
 		Long id =Long.valueOf( i);
@@ -226,13 +226,13 @@ class QuestionAndAnswerAppApplicationTests {
 				// with MVC result i can get the results here to get the model and view
 				 ModelAndView mav = mvcResult.getModelAndView();
 				 
-				 ModelAndViewAssert.assertViewName(mav, "Edit_post_For_Admin"); 
+				 ModelAndViewAssert.assertViewName(mav, "Admin/Edit_post_For_Admin"); 
 		
 	}
 	
 	
 	@Test
-	 void editValidPostFormHttpRequest() throws Exception {
+	 void editValidPostFormForAdminHttpRequest() throws Exception {
 		
 		int i = 1;
 		Long id =Long.valueOf( i);
@@ -263,7 +263,7 @@ class QuestionAndAnswerAppApplicationTests {
 	}
 	
 	@Test
-	 void editInValidPostFormHttpRequest() throws Exception {
+	 void editInValidPostFormForAdminHttpRequest() throws Exception {
 		
 		int i = 1;
 		Long id =Long.valueOf( i);
@@ -284,7 +284,7 @@ class QuestionAndAnswerAppApplicationTests {
 				// with MVC result i can get the results here to get the model and view
 				 ModelAndView mav = mvcResult.getModelAndView();
 				 
-				 ModelAndViewAssert.assertViewName(mav, "Edit_post_For_Admin"); 
+				 ModelAndViewAssert.assertViewName(mav, "Admin/Edit_post_For_Admin"); 
 				 
 				 // now let see if the content changed , it shoudldnt as given empty string
 				 assertEquals("What is ARRAY1?",this.postService.findPostById(id).getTitle());
@@ -294,7 +294,7 @@ class QuestionAndAnswerAppApplicationTests {
 	}
 	
 	@Test
-	 void updatePostFormHttpRequest() throws Exception {
+	 void updatePostFormForAdminHttpRequest() throws Exception {
 		
 		
 		int i = 1;
@@ -319,7 +319,7 @@ class QuestionAndAnswerAppApplicationTests {
 	
 	
 	@Test 
-	 void deletePostFormHttpRequest() throws Exception {
+	 void deletePostFormForAdminHttpRequest() throws Exception {
 		
 		int i = 1;
 		Long id =Long.valueOf(i);
@@ -341,9 +341,8 @@ class QuestionAndAnswerAppApplicationTests {
 
 	}
 	
-	
 	@Test 
-	 void viewPostFormHttpRequest() throws Exception {
+	 void viewPostFormbyUrlForAdminHttpRequest() throws Exception {
 		
 		int i = 1;
 		Long id =Long.valueOf(i);
@@ -361,14 +360,14 @@ class QuestionAndAnswerAppApplicationTests {
 	 ModelAndView mav = mvcResult.getModelAndView();
  
 //	// now I have the model and view we can perform some assets which is to test
-	 ModelAndViewAssert.assertViewName(mav, "View_post_For_Admin");
+	 ModelAndViewAssert.assertViewName(mav, "Admin/View_post_For_Admin");
 		
 		
 	}
 	
 	
 	@Test 
-	 void searchPostFormHttpRequest() throws Exception {
+	 void searchPostFormForAdminHttpRequest() throws Exception {
 		
 		 MvcResult mvcResult = this.mockMvc.perform(MockMvcRequestBuilders.get("/admin/posts/search?query={query}","S"))
 				 .andExpect(status().isOk()).andReturn();
@@ -377,9 +376,65 @@ class QuestionAndAnswerAppApplicationTests {
 		 ModelAndView mav = mvcResult.getModelAndView();
 	 
 //		// now I have the model and view we can perform some assets which is to test
-		 ModelAndViewAssert.assertViewName(mav, "Posts_For_Admin");
+		 ModelAndViewAssert.assertViewName(mav, "Admin/Posts_For_Admin");
 		
 		
 	}
+	
+//////////////////////// CLIENT /////////////////////////////////////////	
+	
+	@Test
+	 void showAllQAPostsForClientHttpRequest() throws Exception{
+				
+		// Web related testing
+		 MvcResult mvcResult = this.mockMvc.perform(MockMvcRequestBuilders.get("/"))
+	                .andExpect(status().isOk()).andReturn();
+		 
+		 // with MVC result i can get the results here to get the model and view
+		 ModelAndView mav = mvcResult.getModelAndView();
+		 
+		 // now I have the model and view we can perform some assets which is to test
+		 ModelAndViewAssert.assertViewName(mav, "QA/QA_Post_For_Client");
+		
+	}
+	
+
+	
+	
+	@Test 
+	 void searchQAPostFormForClientHttpRequest() throws Exception {
+		
+		 MvcResult mvcResult = this.mockMvc.perform(MockMvcRequestBuilders.get("/page/search?query={query}","S"))
+				 .andExpect(status().isOk()).andReturn();
+		 
+		 // with MVC result i can get the results here to get the model and view
+		 ModelAndView mav = mvcResult.getModelAndView();
+	 
+//		// now I have the model and view we can perform some assets which is to test
+		 ModelAndViewAssert.assertViewName(mav, "QA/QA_Post_For_Client");	
+		
+	}
+	
+	
+	@Test 
+	 void viewQAPostFormbyUrlForClientHttpRequest() throws Exception {
+		
+		int i = 1;
+		Long id =Long.valueOf(i);
+		
+		
+	 MvcResult mvcResult = this.mockMvc.perform(MockMvcRequestBuilders.get("/post/{postUrl}",this.postService.findPostById(id).getUrl()))
+			 .andExpect(status().isOk()).andReturn();
+	 
+	 // with MVC result i can get the results here to get the model and view
+	 ModelAndView mav = mvcResult.getModelAndView();
+
+//	// now I have the model and view we can perform some assets which is to test
+	 ModelAndViewAssert.assertViewName(mav, "QA/View_post_For_Client");
+		
+		
+	}
+	
+	
 
 }
