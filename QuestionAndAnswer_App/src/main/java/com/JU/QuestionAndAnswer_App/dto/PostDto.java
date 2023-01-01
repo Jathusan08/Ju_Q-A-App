@@ -1,6 +1,8 @@
 package com.JU.QuestionAndAnswer_App.dto;
 
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
@@ -33,5 +35,5 @@ public class PostDto {
 	
 	private Date lastUpdated;
 	
-	
+	private Set<CommentDto> comments = new HashSet<>(); 
 }

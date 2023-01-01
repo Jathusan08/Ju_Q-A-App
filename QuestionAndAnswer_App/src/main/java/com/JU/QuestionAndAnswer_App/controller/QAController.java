@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.JU.QuestionAndAnswer_App.dto.CommentDto;
 import com.JU.QuestionAndAnswer_App.dto.PostDto;
 import com.JU.QuestionAndAnswer_App.service.PostService;
 
@@ -47,6 +48,12 @@ public class QAController {
 		PostDto postDto  = this.postService.findPostByUrl(postUrl);
 		
 		model.addAttribute("post", postDto); 
+		
+		// create empty CommentDto object
+		
+		CommentDto commentDto = new CommentDto();
+		
+		model.addAttribute("commentDto", commentDto); 
 		
 		return "QA/View_post_For_Client";
 		

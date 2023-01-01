@@ -1,18 +1,17 @@
 package com.JU.QuestionAndAnswer_App.entity;
 
+import java.util.Date;
 
-
-import org.hibernate.annotations.CreationTimestamp; 
+import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
-//import jakarta.persistence.Lob;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -20,39 +19,28 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
-
-
-
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
 @Entity // to tell spring this is entity class that is mapped to database
-@Table(name="posts") 
-
-public class Post {
+@Table(name="comments") 
+public class Comment {
 	
 	@Id // to tell this field is ID meaning primary key which is uniques as well can not contain null value
 	@GeneratedValue(strategy=GenerationType.IDENTITY) // autoincrement
-	@Column(name="post_id") // to map the fields to the customer table columns and need to match exact column name in the table
-	private Long id;	
+	@Column(name="comment_id") 
+	private Long id;
 	
-	@Column(name="title", nullable = false) 
-	private String title;
+	@Column(name="name", nullable = false) 
+	private String name;
 	
-	@Column(name="url") 
-	private String url;
+	@Column(name="email", nullable = false)
+	private String email;
 	
-
 	@Column(name="content", nullable = false) 
 	private String content;
-	
-	@Column(name="shortDescription") 
-	private String shortDescription;
 	
 	@Column(name="date_created") // to map the fields to the customer table columns and need to 
 	@CreationTimestamp // these are special annotations Hibernate will automatically manage the timestamps, 
@@ -64,6 +52,10 @@ public class Post {
 	//so there no need for the developer to manually call these method or set these fields here
 	private Date lastUpdated;
 	
-	@OneToMany(cascade = CascadeType.REMOVE, mappedBy = "post") // one post has many comments, mappedBY is variable name that it has foreign key and when a post is deleted then the comments will also be delted
-	private Set<Comment> comments = new HashSet<>();
+	@ManyToOne() // many commments belont to 1 post
+	@JoinColumn(name="post_id", nullable = false)
+	private Post post;
+
+
+
 }

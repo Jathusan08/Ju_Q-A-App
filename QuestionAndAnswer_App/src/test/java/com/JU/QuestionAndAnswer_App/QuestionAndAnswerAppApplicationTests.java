@@ -1,6 +1,6 @@
 package com.JU.QuestionAndAnswer_App;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals; 
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertIterableEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
@@ -34,7 +34,9 @@ import org.springframework.web.servlet.ModelAndView;
 
 
 import com.JU.QuestionAndAnswer_App.dto.PostDto;
+import com.JU.QuestionAndAnswer_App.service.CommentService;
 import com.JU.QuestionAndAnswer_App.service.PostService;
+
 
 @TestPropertySource("/application-test.properties")// this will allow me to load properties during 
 @AutoConfigureMockMvc
@@ -47,6 +49,9 @@ class QuestionAndAnswerAppApplicationTests {
 
 	@Autowired
 	private PostService postService;
+	
+	@Autowired
+	private CommentService commentService;
 	
 	@Autowired
 	private JdbcTemplate jdbc;
@@ -78,6 +83,21 @@ class QuestionAndAnswerAppApplicationTests {
 			+ "'I was wondering when most people wrote their unit tests, if at all. I usually write tests after writing my "
 			+ "initial code to make sure it works like its supposed to. I then fix what is broken.', "
 			+ "'need to clarity about testing', NOW())");
+	
+	
+	this.jdbc.execute("INSERT INTO comments (comment_id, name, email, content, date_created, post_id )\n"
+			+ "VALUES (1, 'Jeff', 'Jeff@hotmail.com', 'Array can hold more than 1 values', NOW(),1)");
+	
+	
+	this.jdbc.execute("INSERT INTO comments (comment_id, name, email, content, date_created, post_id )\n"
+			+ "VALUES (2, 'Chris', 'Chris@hotmail.com', 'If statement are set of instructions that you a computer or machine what to do and what not to do', NOW(),2)\n"
+			+ "");
+	
+	
+	this.jdbc.execute("INSERT INTO comments (comment_id, name, email, content, date_created, post_id )\n"
+			+ "VALUES (3, 'Billa', 'Billa@hotmail.com', 'it’s recommended to write test using Test Driven Development so "
+			+ "that you can fix any issues earlier before the coding goes to the production', NOW(),3)\n"
+			+ "");
 
 	}
 	
@@ -85,6 +105,7 @@ class QuestionAndAnswerAppApplicationTests {
 	@AfterEach
 	public void setupAfterTransaction() { 
 		// delete the sample data after each test so clean uo
+		 jdbc.execute("DELETE FROM comments");
 		 jdbc.execute("DELETE FROM posts");
 	
 	}
@@ -435,6 +456,58 @@ class QuestionAndAnswerAppApplicationTests {
 		
 	}
 	
+	@Test
+	 void createACommentforPostForClientHttpRequest() throws Exception {
+		
+		int i = 1;
+		Long id =Long.valueOf( i);
+		
+		PostDto post = this.postService.findPostById(id);
+		
+		
+		// perform HTTP request - /admin/posts/{postId}/edit
+				 MvcResult mvcResult = this.mockMvc.perform(MockMvcRequestBuilders.post("/{postUrl}/comments",post.getUrl())
+						  .contentType(MediaType.APPLICATION_JSON)
+						  .param("name", "Rocky")
+						  .param("email", "Rocky@hotmail.com")
+						  .param("content", "Nice one !"))
+						 .andExpect(status().is3xxRedirection()).andReturn();
+				 
+				// with MVC result i can get the results here to get the model and view
+				 ModelAndView mav = mvcResult.getModelAndView();
+				 
+				 ModelAndViewAssert.assertViewName(mav, "redirect:/post/"+post.getUrl()); 
+				 				 						
+	}
 	
+	
+	@Test
+	 void createAnInvalidCommentforPostForClientHttpRequest() throws Exception {
+		
+		int i = 1;
+		Long id =Long.valueOf( i);
+		
+		PostDto post = this.postService.findPostById(id);
+		
+	
+		
+		// perform HTTP request - /admin/posts/{postId}/edit
+				 MvcResult mvcResult = this.mockMvc.perform(MockMvcRequestBuilders.post("/{postUrl}/comments",post.getUrl())
+						  .contentType(MediaType.APPLICATION_JSON)
+						  .param("name", " ")
+						  .param("email", " ")
+						  .param("content", " "))
+						 .andExpect(status().isOk()).andReturn();
+				 
+				 
+				// with MVC result i can get the results here to get the model and view
+				 ModelAndView mav = mvcResult.getModelAndView();
+				 
+				 ModelAndViewAssert.assertViewName(mav, "QA/View_post_For_Client"); 
+				 
+			
+	}
+	
+
 
 }
