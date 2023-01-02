@@ -1,5 +1,8 @@
 package com.JU.QuestionAndAnswer_App.service;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -43,6 +46,31 @@ public class CommentServiceImpl implements CommentService {
 		
 		// let save comment object
 		this.commentRepository.save(comment);
+	}
+
+	@Override
+	public List<CommentDto> findAllComments() {
+		
+		List<Comment> comments = this.commentRepository.findAll();
+		
+		
+		// convert Comment entity to CommentDto		
+		List<CommentDto> commentDto  = new ArrayList<>();
+		
+		for(Comment comment: comments) {
+			
+			
+			commentDto.add(CommentMapper.mapToCommentDto(comment));
+		}
+		
+		return commentDto;
+	}
+
+	@Override
+	public void deleteComment(Long commentId) {
+		
+		this.commentRepository.deleteById(commentId);
+		
 	}
 
 }

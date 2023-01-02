@@ -12,7 +12,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.JU.QuestionAndAnswer_App.dto.CommentDto;
 import com.JU.QuestionAndAnswer_App.dto.PostDto;
+import com.JU.QuestionAndAnswer_App.service.CommentService;
 import com.JU.QuestionAndAnswer_App.service.PostService;
 
 import jakarta.validation.Valid;
@@ -21,20 +23,22 @@ import jakarta.validation.Valid;
 public class PostController {
 	
 	private PostService postService;
+	private CommentService commentService;
 	
 	public PostController() {}
 	
 	@Autowired
-public PostController(PostService postService) {
+public PostController(PostService postService, CommentService commentService) {
 		
 		this.postService = postService;
+		this.commentService = commentService;
 		
 	}
 	
 	
 	// get list of posts for Admin Users ONLY
 	@GetMapping("/admin/posts")
-	public String showAllPosts(Model model) {
+	public String showAllQAPosts(Model model) {
 		
 		// get the list of posts and add to the model so we can use that attribute to populate the data
 		model.addAttribute("post", this.postService.getAllPosts());
@@ -46,7 +50,7 @@ public PostController(PostService postService) {
 	
 	// direct to add new post
 	@GetMapping("/admin/posts/newPost")
-	public String newPostForm(Model model) {
+	public String newQAPostForm(Model model) {
 		
 		// create an object empty PostDto object so that i can pass that object to my view where im able to the bind the user
 		// input to the object fields
@@ -59,7 +63,7 @@ public PostController(PostService postService) {
 	
 	// to handle form submit request
 	@PostMapping("/admin/posts")
-	public String createNewPost(@Valid @ModelAttribute("post")PostDto postDto, 
+	public String createNewQAPost(@Valid @ModelAttribute("post")PostDto postDto, 
 								BindingResult result, 
 								Model model) {
 		
@@ -93,7 +97,7 @@ public PostController(PostService postService) {
 	
 	// direct to edit  post
 	@GetMapping("/admin/posts/{postId}/edit")
-	public String showEditPostForm(@PathVariable("postId") Long postId, Model model) {
+	public String showEditQAPostForm(@PathVariable("postId") Long postId, Model model) {
 		
 		// @PathVariable will get the postId value from ULR
 		
@@ -110,7 +114,7 @@ public PostController(PostService postService) {
 	
 	// to handle edit form submit request
 	 @PostMapping("/admin/posts/{postId}")
-	    public String updatePost(@PathVariable("postId") Long postId,
+	    public String updateQAPost(@PathVariable("postId") Long postId,
 	                             @Valid @ModelAttribute("post") PostDto post,
 	                             BindingResult result,
 	                             Model model){
@@ -155,7 +159,7 @@ public PostController(PostService postService) {
 	 
 		// direct to edit  post
 		@GetMapping("/admin/posts/{postId}/delete")
-		public String deletePostForm(@PathVariable("postId") Long postId) {
+		public String deleteQAPostForm(@PathVariable("postId") Long postId) {
 			
 		// delete 
 			
@@ -168,7 +172,7 @@ public PostController(PostService postService) {
 		
 		// direct to view  post
 		@GetMapping("/admin/posts/{postUrl}/view")
-		public String viewPostForm(@PathVariable("postUrl") String postUrl, Model model) {
+		public String viewQAPostForm(@PathVariable("postUrl") String postUrl, Model model) {
 			
 			// retrieve postDto object
 			PostDto postDto  = this.postService.findPostByUrl(postUrl);
@@ -181,7 +185,7 @@ public PostController(PostService postService) {
 		
 		// localhost:8080/admin/posts/search?query=java
 		@GetMapping("/admin/posts/search")
-		public String searchPosts(@RequestParam(value = "query") String query, Model model) {
+		public String searchQAPosts(@RequestParam(value = "query") String query, Model model) {
 			
 			
 			List<PostDto> posts = this.postService.searchPosts(query);
@@ -190,6 +194,32 @@ public PostController(PostService postService) {
 			
 			return "Admin/Posts_For_Admin";
 		}
+		
+		// direct to list of comments view 
+		
+		@GetMapping("/admin/posts/comments")
+		public String QAPostComments(Model model) {
+			
+			List<CommentDto> commentDto  = this.commentService.findAllComments();
+			
+			model.addAttribute("comments", commentDto);
+			
+			return"Admin/View_comments_For_Admin";
+		}
+		
+		
+		// direct to edit  post
+		@GetMapping("/admin/posts/comments/{commentId}/delete")
+		public String deleteCommentFromQAPost(@PathVariable("commentId") Long commentId) {
+					
+				// delete  a comment
+					
+					//this.postService.deletePost(postId);
+			this.commentService.deleteComment(commentId);
+					
+					return "redirect:/admin/posts/comments";
+					
+				}	
 	
 	// create post URL
 	private static String getUrl(String postTitle) {

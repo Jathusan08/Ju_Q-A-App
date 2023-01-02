@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"> 
+
+<!-- link expression to point to the external CSS file -->
+
+
+<div th:replace="~{Admin/Header :: header}"></div>
+
+
+
+<body>
+
+
+
+<!-- NavBar -->
+<div th:replace="~{Admin/Header :: navbar}"></div>
+
+
+
+<div align = "center" style="margin-top:13px; overflow:scroll; 
+  padding-bottom: 5rem;">
+	
+
+
+	<div class="container">
+	
+		<div class = "row">
+		
+			<h1>List of Comments</h1>
+			
+		</div>
+					
+			<br>
+			
+			<table class="table table-striped table-hover table-bordered">
+			
+				<thead class="table-dark">
+				
+					<tr>				
+					
+					   <th style="width:25%">Email</th>
+					   <th style="width:25%">Comment</th>
+					   <th style="width:25%">Date Created</th>
+					   <th style="width:25%">Actions</th>
+					</tr>	
+				
+				</thead>
+				
+				<tbody>
+				
+					<tr th:each ="comment : ${comments}">
+					
+						
+						<td th:text="${comment.email}"> ?</td>
+						<td th:utext="${comment.content}">?</td>
+						<td th:text="${#dates.format(comment.dateCreated, 'dd-MMM-yyyy')}">?</td>
+						
+						<td>
+						<!-- delete -->
+						<a data-toggle="modal" data-target="#modal-warning"
+						 th:attr="data-target='#modal-warning'+${comment.id}" 
+						 th:href="@{/admin/posts/comments/{commentId}/delete(commentId=${comment.id})}" 
+						 class="btn btn-danger" 
+						 onclick="if(!(confirm('Are you sure you want to delete this comment?'))) return false" >
+							<span class="glyphicon glyphicon-trash"></span>
+							Delete
+							</a>
+					
+						</td>
+						
+					
+						 
+					</tr>	
+				
+				</tbody>
+			
+			</table>
+
+	</div>
+	
+	
+	</div>
+	
+	<hr>
+	<!-- Footer   -->
+<div th:replace="~{Admin/footer :: footer}"></div>
+	
+	
+
+
+</body>
+</html>

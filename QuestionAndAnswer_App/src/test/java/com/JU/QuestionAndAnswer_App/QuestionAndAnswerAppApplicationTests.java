@@ -402,6 +402,49 @@ class QuestionAndAnswerAppApplicationTests {
 		
 	}
 	
+	
+	@Test
+	 void showAllCommentsForAdminHttpRequest() throws Exception{
+		
+		// we should have 3 data on H2 Embeded database
+		
+		assertEquals(3, this.commentService.findAllComments().size());	
+		
+		// Web related testing
+		 MvcResult mvcResult = this.mockMvc.perform(MockMvcRequestBuilders.get("/admin/posts/comments"))
+	                .andExpect(status().isOk()).andReturn();
+		 
+		 // with MVC result i can get the results here to get the model and view
+		 ModelAndView mav = mvcResult.getModelAndView();
+		 
+		 // now I have the model and view we can perform some assets which is to test
+		 ModelAndViewAssert.assertViewName(mav, "Admin/View_comments_For_Admin");
+		
+	}
+	
+	@Test 
+	 void deleteACommentForAdminHttpRequest() throws Exception {
+		
+		int i = 1;
+		Long id =Long.valueOf(i);
+		
+		
+		// Delete the grade via HTTP request 
+		 MvcResult mvcResult = this.mockMvc.perform(MockMvcRequestBuilders.get("/admin/posts/comments/{commentId}/delete",id))
+				 .andExpect(status().is3xxRedirection()).andReturn();
+		 
+		 // with MVC result i can get the results here to get the model and view
+		 ModelAndView mav = mvcResult.getModelAndView();
+	 
+//		// now I have the model and view we can perform some assets which is to test
+		 ModelAndViewAssert.assertViewName(mav, "redirect:/admin/posts/comments"); // the grade we passed is invalid as it does not exist so it should return to 'error' view page insteaed
+		 
+//		 // now we should not have id 1 comment in our H2 database as we have deleted 1 already
+		 
+		 assertEquals(2, this.commentService.findAllComments().size());
+
+	}
+	
 //////////////////////// CLIENT /////////////////////////////////////////	
 	
 	@Test

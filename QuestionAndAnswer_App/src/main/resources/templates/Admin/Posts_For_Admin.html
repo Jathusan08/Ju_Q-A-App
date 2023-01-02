@@ -70,9 +70,9 @@
 				
 					<tr>				
 					
-					   <th style="width:25%">Question Title</th>
-					   <th style="width:25%">Question Short Description</th>
-					   <th style="width:14%">Question Date Created</th>
+					   <th style="width:25%">Title</th>
+					   <th style="width:25%">Short Description</th>
+					   <th style="width:14%">Date Created</th>
 					   <th style="width:16%">Actions</th>
 					</tr>	
 				
@@ -91,7 +91,7 @@
 						
 							<a th:href="@{/admin/posts/{postId}/edit(postId=${post.id})}" class="btn btn-primary">Edit</a>
 							
-							<a data-toggle="modal" data-target="#modal-warning" th:attr="data-target='#modal-warning'+${post.id}" th:href="@{/admin/posts/{postId}/delete(postId=${post.id})}" class="btn btn-danger" >
+							<a data-toggle="modal" data-target="#modal-warning" th:attr="data-target='#modal-warning'+${post.id}" th:href="@{/admin/posts/{postId}/delete(postId=${post.id})}" class="btn btn-danger" onclick="if(!(confirm('Are you sure you want to delete this post?'))) return false" >
 							<span class="glyphicon glyphicon-trash"></span>
 							Delete
 							</a>
