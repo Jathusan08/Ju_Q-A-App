@@ -96,9 +96,28 @@ class QuestionAndAnswerAppApplicationTests {
 	
 	this.jdbc.execute("INSERT INTO comments (comment_id, name, email, content, date_created, post_id )\n"
 			+ "VALUES (3, 'Billa', 'Billa@hotmail.com', 'it’s recommended to write test using Test Driven Development so "
-			+ "that you can fix any issues earlier before the coding goes to the production', NOW(),3)\n"
-			+ "");
+			+ "that you can fix any issues earlier before the coding goes to the production', NOW(),3)");
+	
+	
+	this.jdbc.execute("INSERT INTO _users (user_id, name, email, passwords)\n"
+			+ "VALUES (1, 'John', 'John@hotmail.com', 'test123')");
 
+	
+	this.jdbc.execute("INSERT INTO _users (user_id, name, email, passwords)\n"
+			+ "VALUES (2, 'Mike', 'Mike@hotmail.com', 'test123')");
+	
+	this.jdbc.execute("INSERT INTO _users (user_id, name, email, passwords)\n"
+			+ "VALUES (3, 'David', 'David@hotmail.com', 'test123')");
+
+	this.jdbc.execute("INSERT INTO _roles(role_id, name)\n"
+			+ "VALUES (1, 'ADMIN')");
+	
+	this.jdbc.execute("INSERT INTO _roles(role_id, name)\n"
+			+ "VALUES (2, 'MEMBER')");
+	
+	this.jdbc.execute("INSERT INTO _roles(role_id, name)\n"
+			+ "VALUES (3, 'GUEST')");
+	
 	}
 	
 	
@@ -107,6 +126,10 @@ class QuestionAndAnswerAppApplicationTests {
 		// delete the sample data after each test so clean uo
 		 jdbc.execute("DELETE FROM comments");
 		 jdbc.execute("DELETE FROM posts");
+		 jdbc.execute("DELETE FROM _users_roles");
+		 jdbc.execute("DELETE FROM _users");
+		 jdbc.execute("DELETE FROM _roles");
+		
 	
 	}
 	
@@ -551,6 +574,122 @@ class QuestionAndAnswerAppApplicationTests {
 			
 	}
 	
+	
+	@Test
+	 void showSignUpFormForClientHttpRequest() throws Exception{
+		
+		// we should have 3 data on H2 Embeded database
+		
+		assertEquals(3, this.postService.getAllPosts().size());	
+		
+		// Web related testing
+		 MvcResult mvcResult = this.mockMvc.perform(MockMvcRequestBuilders.get("/signUp"))
+	                .andExpect(status().isOk()).andReturn();
+		 
+		 // with MVC result i can get the results here to get the model and view
+		 ModelAndView mav = mvcResult.getModelAndView();
+		 
+		 // now I have the model and view we can perform some assets which is to test
+		 ModelAndViewAssert.assertViewName(mav, "SignUp");
+		
+	}
+	
+	@Test
+	 void SignUpAnUserHttpRequest() throws Exception{
+		
+		request = new MockHttpServletRequest(); // this is object that we can use to make mock servlet request and I can populate this request 
+//		// with some data, so here we set up some parameters for title, shortDescription and content. This is
+//		// like a reusable object that we can make use of for sending request to a guven controller or 
+//		// endpoint
+		
+		request.setParameter("firstName", "David");
+		request.setParameter("lastName", "Billa");
+		request.setParameter("email", "DavidBilla@hotmail.com");
+		request.setParameter("password", "test123");
+		
 
+//		// create a post using an HTTP request and post data to a mapping on our controller 
+		MvcResult mvcResult = this.mockMvc.perform(post("/signUp/save")
+				  .contentType(MediaType.APPLICATION_JSON)
+				  .param("firstName", request.getParameterValues("firstName"))
+				  .param("lastName", request.getParameterValues("lastName"))
+				  .param("email", request.getParameterValues("email"))
+				 .param("password", request.getParameterValues("password")))
+				.andExpect(status().is3xxRedirection()).andReturn();
+				
+             
+		 // with MVC result i can get the results here to get the model and view
+		 ModelAndView mav = mvcResult.getModelAndView();
+		 
+		 // test to see
+		 ModelAndViewAssert.assertViewName(mav, "redirect:/signUp?success");
+		
+	}
+
+	
+	@Test
+	 void invalidSignupFields() throws Exception{
+		
+		request = new MockHttpServletRequest(); // this is object that we can use to make mock servlet request and I can populate this request 
+//		// with some data, so here we set up some parameters for title, shortDescription and content. This is
+//		// like a reusable object that we can make use of for sending request to a guven controller or 
+//		// endpoint
+		
+		request.setParameter("firstName", "");
+		request.setParameter("lastName", "");
+		request.setParameter("email", "");
+		request.setParameter("password", "");
+		
+
+//		// create a post using an HTTP request and post data to a mapping on our controller 
+		MvcResult mvcResult = this.mockMvc.perform(post("/signUp/save")
+				  .contentType(MediaType.APPLICATION_JSON)
+				  .param("firstName", request.getParameterValues("firstName"))
+				  .param("lastName", request.getParameterValues("lastName"))
+				  .param("email", request.getParameterValues("email"))
+				 .param("password", request.getParameterValues("password")))
+				.andExpect(status().isOk()).andReturn();
+				
+            
+		 // with MVC result i can get the results here to get the model and view
+		 ModelAndView mav = mvcResult.getModelAndView();
+		 
+		 // test to see
+		 ModelAndViewAssert.assertViewName(mav, "SignUp");
+		
+	}
+	
+	
+	@Test
+	 void userAlredySignedUp() throws Exception{
+		
+		request = new MockHttpServletRequest(); // this is object that we can use to make mock servlet request and I can populate this request 
+//		// with some data, so here we set up some parameters for title, shortDescription and content. This is
+//		// like a reusable object that we can make use of for sending request to a guven controller or 
+//		// endpoint
+		
+		request.setParameter("firstName", "");
+		request.setParameter("lastName", "");
+		request.setParameter("email", "John@hotmail.com");
+		request.setParameter("password", "");
+		
+
+//		// create a post using an HTTP request and post data to a mapping on our controller 
+		MvcResult mvcResult = this.mockMvc.perform(post("/signUp/save")
+				  .contentType(MediaType.APPLICATION_JSON)
+				  .param("firstName", request.getParameterValues("firstName"))
+				  .param("lastName", request.getParameterValues("lastName"))
+				  .param("email", request.getParameterValues("email"))
+				 .param("password", request.getParameterValues("password")))
+				.andExpect(status().isOk()).andReturn();
+				
+           
+		 // with MVC result i can get the results here to get the model and view
+		 ModelAndView mav = mvcResult.getModelAndView();
+		 
+		 // test to see
+		 ModelAndViewAssert.assertViewName(mav, "SignUp");
+		
+	}
 
 }

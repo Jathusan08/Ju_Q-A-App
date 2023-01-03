@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"> 
+
+<head >
+<meta charset="UTF-8">
+<title>JU-Q&A For Coders</title>
+
+<!-- Bootstrap -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" 
+	  rel="stylesheet" 
+	  integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" 
+	  crossorigin="anonymous">
+	  
+
+</head>
+
+
+<body>
+
+
+<!-- NavBar -->
+<nav class="navbar navbar-expand-lg navbar navbar-dark bg-dark" th:fragment="navbar">
+  <div class="container-fluid">
+    <a class="navbar-brand" href="#" style="color: #FFBF00;">JU-QA For Coders</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+        <li class="nav-item">
+          <a class="nav-link active" aria-current="page" th:href="@{http://localhost:8080/}" style="color: #FFBF00;">All QA Posts</a>
+        </li>
+             
+      </ul>
+
+    </div>
+  </div>
+</nav>
+
+<br />
+	
+ <div class="container">
+ 
+ 		<div class="row col-md-8 offset-md-2">
+ 		
+ 			<div class="card">
+ 			
+ 				<div class="card-header">
+ 				
+ 					<h1 class="text-center"> SignUp</h1>
+ 				
+ 				</div>
+ 				
+ 				 <div th:if="${param.success}">
+ 				 
+ 				 	<div class="alert alert-info">
+ 				 	
+ 				 		You have registered successfully to JU-Q&A For Coders Web App
+ 				 	
+ 				 	</div>
+ 				 
+ 				 </div>
+ 				
+ 				<div class="card-body">
+ 				
+ 					<form method ="post" role="form" th:action="@{/signUp/save}" th:object="${user}">
+ 					
+ 						<div class="form-group mb-3">
+ 						
+ 							<label class="form-label">First Name:</label>
+ 							
+ 							<input class="form-control" 
+ 								   id="firstName" 
+ 								   name="firstName" 
+ 								   placeholder="Enter a first name"
+ 								   type="text"
+ 								   th:field="*{firstName}"/>
+ 								   
+ 						 <p th:if="${#fields.hasErrors('firstName')}" class="text-danger" th:errors="*{firstName}"></p> 	
+ 						
+ 						</div>
+ 						
+ 							<div class="form-group mb-3">
+ 						
+ 							<label class="form-label">Last Name:</label>
+ 							
+ 							<input class="form-control" 
+ 								   id="lastName" 
+ 								   name="lastName" 
+ 								   placeholder="Enter a last name"
+ 								   type="text"
+ 								   th:field="*{lastName}"/>
+ 								   
+ 						 <p th:if="${#fields.hasErrors('lastName')}" class="text-danger" th:errors="*{lastName}"></p> 
+ 						
+ 						</div>
+ 						
+ 						<div class="form-group mb-3">
+ 						
+ 							<label class="form-label">Email:</label>
+ 							
+ 							<input class="form-control" 
+ 								   id="email" 
+ 								   name="email" 
+ 								   placeholder="Enter an email address"
+ 								   type="email"
+ 								   th:field="*{email}"/>
+ 								   
+ 						<p th:if="${#fields.hasErrors('email')}" class="text-danger" th:errors="*{email}"></p> 
+ 						
+ 						</div>
+ 						
+ 							<div class="form-group mb-3">
+ 						
+ 							<label class="form-label">Password:</label>
+ 							
+ 							<input class="form-control" 
+ 								   id="password" 
+ 								   name="password" 
+ 								   placeholder="Enter a password"
+ 								   type="password"
+ 								   th:field="*{password}"/>
+ 						
+ 						<p th:if="${#fields.hasErrors('password')}" class="text-danger" th:errors="*{password}"></p> 
+ 						
+ 						</div>
+ 						
+ 						<!-- button -->
+ 						
+ 							<div class="form-group mb-3">
+ 							
+ 								<button type="submit" class="btn btn-primary">SignUp</button>
+ 								
+ 								<span>Already registered?
+ 								
+ 									<a th:href="@{/login}">Login Here</a>
+ 								
+ 								</span>
+ 							
+ 							</div>
+ 					
+ 					</form>
+ 				
+ 				</div>
+ 			
+ 			</div>	
+ 		
+ 		</div>
+ 
+ 
+ </div>
+ 
+ <br />
+  <br />
+ 
+
+	<!-- Footer   -->
+	<footer class="footer-copyright text-center bg-dark py-3"
+		style="position:fixed; height:80px; width:100%; bottom:0" th:fragment="footer">
+	
+		<div>
+		
+			<strong style="color: #FFBF00;">Copyright &copy; 2022  </strong>
+		
+		
+		</div>
+	
+	</footer>
+	
+	
+
+
+</body>
+</html>
