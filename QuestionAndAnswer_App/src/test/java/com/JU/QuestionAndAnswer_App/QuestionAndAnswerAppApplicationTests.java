@@ -1,11 +1,12 @@
 package com.JU.QuestionAndAnswer_App;
 
-import static org.junit.jupiter.api.Assertions.assertEquals; 
+import static org.junit.jupiter.api.Assertions.assertEquals;  
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertIterableEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -25,6 +26,9 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.mock.web.MockHttpServletRequest;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.ModelAndViewAssert;
 import org.springframework.test.web.servlet.MockMvc;
@@ -32,10 +36,13 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.web.servlet.ModelAndView;
 
-
+import com.JU.QuestionAndAnswer_App.dao.UserRepository;
 import com.JU.QuestionAndAnswer_App.dto.PostDto;
+import com.JU.QuestionAndAnswer_App.entity.User;
+import com.JU.QuestionAndAnswer_App.security.CustomUserDetailsService;
 import com.JU.QuestionAndAnswer_App.service.CommentService;
 import com.JU.QuestionAndAnswer_App.service.PostService;
+import com.JU.QuestionAndAnswer_App.service.UserService;
 
 
 @TestPropertySource("/application-test.properties")// this will allow me to load properties during 
@@ -52,6 +59,12 @@ class QuestionAndAnswerAppApplicationTests {
 	
 	@Autowired
 	private CommentService commentService;
+	
+	@Autowired
+	private UserService userService;
+	
+	@Autowired
+	private UserRepository userRepository;
 	
 	@Autowired
 	private JdbcTemplate jdbc;
@@ -110,13 +123,13 @@ class QuestionAndAnswerAppApplicationTests {
 			+ "VALUES (3, 'David', 'David@hotmail.com', 'test123')");
 
 	this.jdbc.execute("INSERT INTO _roles(role_id, name)\n"
-			+ "VALUES (1, 'ADMIN')");
+			+ "VALUES (1, 'ROLE_ADMIN')");
 	
 	this.jdbc.execute("INSERT INTO _roles(role_id, name)\n"
-			+ "VALUES (2, 'MEMBER')");
+			+ "VALUES (2, 'ROLE_MEMBER')");
 	
 	this.jdbc.execute("INSERT INTO _roles(role_id, name)\n"
-			+ "VALUES (3, 'GUEST')");
+			+ "VALUES (3, 'ROLE_GUEST')");
 	
 	}
 	
@@ -147,6 +160,7 @@ class QuestionAndAnswerAppApplicationTests {
 	
 	
 	@Test
+	@WithMockUser(username="admin",roles={"USER","ADMIN"})
 	 void showAllPostsForAdminHttpRequest() throws Exception{
 		
 		// we should have 3 data on H2 Embeded database
@@ -166,6 +180,7 @@ class QuestionAndAnswerAppApplicationTests {
 	}
 	
 	@Test
+	@WithMockUser(username="admin",roles={"USER","ADMIN"})
 	 void showPostFormForAdminHttpRequest() throws Exception {
 		
 		
@@ -184,6 +199,7 @@ class QuestionAndAnswerAppApplicationTests {
 	
 	
 	@Test
+	@WithMockUser(username="admin",roles={"USER","ADMIN"})
 	 void createInvalidPostForAdminHttpRequest() throws Exception {
 		
 		
@@ -216,6 +232,7 @@ class QuestionAndAnswerAppApplicationTests {
 	}
 	
 	@Test
+	@WithMockUser(username="admin",roles={"USER","ADMIN"})
 	 void createValidPostForAdminHttpRequest() throws Exception {
 		
 		
@@ -253,6 +270,7 @@ class QuestionAndAnswerAppApplicationTests {
 	}
 	
 	@Test
+	@WithMockUser(username="admin",roles={"USER","ADMIN"})
 	 void showEditPostFormForAdminHttpRequest() throws Exception {
 		
 		int i = 1;
@@ -276,6 +294,7 @@ class QuestionAndAnswerAppApplicationTests {
 	
 	
 	@Test
+	@WithMockUser(username="admin",roles={"USER","ADMIN"})
 	 void editValidPostFormForAdminHttpRequest() throws Exception {
 		
 		int i = 1;
@@ -307,6 +326,7 @@ class QuestionAndAnswerAppApplicationTests {
 	}
 	
 	@Test
+	@WithMockUser(username="admin",roles={"USER","ADMIN"})
 	 void editInValidPostFormForAdminHttpRequest() throws Exception {
 		
 		int i = 1;
@@ -338,6 +358,7 @@ class QuestionAndAnswerAppApplicationTests {
 	}
 	
 	@Test
+	@WithMockUser(username="admin",roles={"USER","ADMIN"})
 	 void updatePostFormForAdminHttpRequest() throws Exception {
 		
 		
@@ -363,6 +384,7 @@ class QuestionAndAnswerAppApplicationTests {
 	
 	
 	@Test 
+	@WithMockUser(username="admin",roles={"USER","ADMIN"})
 	 void deletePostFormForAdminHttpRequest() throws Exception {
 		
 		int i = 1;
@@ -386,6 +408,7 @@ class QuestionAndAnswerAppApplicationTests {
 	}
 	
 	@Test 
+	@WithMockUser(username="admin",roles={"USER","ADMIN"})
 	 void viewPostFormbyUrlForAdminHttpRequest() throws Exception {
 		
 		int i = 1;
@@ -411,6 +434,7 @@ class QuestionAndAnswerAppApplicationTests {
 	
 	
 	@Test 
+	@WithMockUser(username="admin",roles={"USER","ADMIN"})
 	 void searchPostFormForAdminHttpRequest() throws Exception {
 		
 		 MvcResult mvcResult = this.mockMvc.perform(MockMvcRequestBuilders.get("/admin/posts/search?query={query}","S"))
@@ -427,6 +451,7 @@ class QuestionAndAnswerAppApplicationTests {
 	
 	
 	@Test
+	@WithMockUser(username="admin",roles={"USER","ADMIN"})
 	 void showAllCommentsForAdminHttpRequest() throws Exception{
 		
 		// we should have 3 data on H2 Embeded database
@@ -446,6 +471,7 @@ class QuestionAndAnswerAppApplicationTests {
 	}
 	
 	@Test 
+	@WithMockUser(username="admin",roles={"USER","ADMIN"})
 	 void deleteACommentForAdminHttpRequest() throws Exception {
 		
 		int i = 1;
@@ -471,6 +497,7 @@ class QuestionAndAnswerAppApplicationTests {
 //////////////////////// CLIENT /////////////////////////////////////////	
 	
 	@Test
+	@WithMockUser(username="admin",roles={"USER","ADMIN"})
 	 void showAllQAPostsForClientHttpRequest() throws Exception{
 				
 		// Web related testing
@@ -489,6 +516,7 @@ class QuestionAndAnswerAppApplicationTests {
 	
 	
 	@Test 
+	@WithMockUser(username="admin",roles={"USER","ADMIN"})
 	 void searchQAPostFormForClientHttpRequest() throws Exception {
 		
 		 MvcResult mvcResult = this.mockMvc.perform(MockMvcRequestBuilders.get("/page/search?query={query}","S"))
@@ -504,6 +532,7 @@ class QuestionAndAnswerAppApplicationTests {
 	
 	
 	@Test 
+	@WithMockUser(username="admin",roles={"USER","ADMIN"})
 	 void viewQAPostFormbyUrlForClientHttpRequest() throws Exception {
 		
 		int i = 1;
@@ -523,6 +552,7 @@ class QuestionAndAnswerAppApplicationTests {
 	}
 	
 	@Test
+	@WithMockUser(username="admin",roles={"USER","ADMIN"})
 	 void createACommentforPostForClientHttpRequest() throws Exception {
 		
 		int i = 1;
@@ -548,6 +578,7 @@ class QuestionAndAnswerAppApplicationTests {
 	
 	
 	@Test
+	@WithMockUser(username="admin",roles={"USER","ADMIN"})
 	 void createAnInvalidCommentforPostForClientHttpRequest() throws Exception {
 		
 		int i = 1;
@@ -576,6 +607,7 @@ class QuestionAndAnswerAppApplicationTests {
 	
 	
 	@Test
+	@WithMockUser(username="admin",roles={"USER","ADMIN"})
 	 void showSignUpFormForClientHttpRequest() throws Exception{
 		
 		// we should have 3 data on H2 Embeded database
@@ -583,18 +615,19 @@ class QuestionAndAnswerAppApplicationTests {
 		assertEquals(3, this.postService.getAllPosts().size());	
 		
 		// Web related testing
-		 MvcResult mvcResult = this.mockMvc.perform(MockMvcRequestBuilders.get("/signUp"))
+		 MvcResult mvcResult = this.mockMvc.perform(MockMvcRequestBuilders.get("/register"))
 	                .andExpect(status().isOk()).andReturn();
 		 
 		 // with MVC result i can get the results here to get the model and view
 		 ModelAndView mav = mvcResult.getModelAndView();
 		 
 		 // now I have the model and view we can perform some assets which is to test
-		 ModelAndViewAssert.assertViewName(mav, "SignUp");
+		 ModelAndViewAssert.assertViewName(mav, "register");
 		
 	}
 	
 	@Test
+	@WithMockUser(username="admin",roles={"USER","ADMIN"})
 	 void SignUpAnUserHttpRequest() throws Exception{
 		
 		request = new MockHttpServletRequest(); // this is object that we can use to make mock servlet request and I can populate this request 
@@ -609,7 +642,7 @@ class QuestionAndAnswerAppApplicationTests {
 		
 
 //		// create a post using an HTTP request and post data to a mapping on our controller 
-		MvcResult mvcResult = this.mockMvc.perform(post("/signUp/save")
+		MvcResult mvcResult = this.mockMvc.perform(post("/register/save")
 				  .contentType(MediaType.APPLICATION_JSON)
 				  .param("firstName", request.getParameterValues("firstName"))
 				  .param("lastName", request.getParameterValues("lastName"))
@@ -622,12 +655,13 @@ class QuestionAndAnswerAppApplicationTests {
 		 ModelAndView mav = mvcResult.getModelAndView();
 		 
 		 // test to see
-		 ModelAndViewAssert.assertViewName(mav, "redirect:/signUp?success");
+		 ModelAndViewAssert.assertViewName(mav, "redirect:/register?success");
 		
 	}
 
 	
 	@Test
+	@WithMockUser(username="admin",roles={"USER","ADMIN"})
 	 void invalidSignupFields() throws Exception{
 		
 		request = new MockHttpServletRequest(); // this is object that we can use to make mock servlet request and I can populate this request 
@@ -642,7 +676,7 @@ class QuestionAndAnswerAppApplicationTests {
 		
 
 //		// create a post using an HTTP request and post data to a mapping on our controller 
-		MvcResult mvcResult = this.mockMvc.perform(post("/signUp/save")
+		MvcResult mvcResult = this.mockMvc.perform(post("/register/save")
 				  .contentType(MediaType.APPLICATION_JSON)
 				  .param("firstName", request.getParameterValues("firstName"))
 				  .param("lastName", request.getParameterValues("lastName"))
@@ -655,12 +689,13 @@ class QuestionAndAnswerAppApplicationTests {
 		 ModelAndView mav = mvcResult.getModelAndView();
 		 
 		 // test to see
-		 ModelAndViewAssert.assertViewName(mav, "SignUp");
+		 ModelAndViewAssert.assertViewName(mav, "register");
 		
 	}
 	
 	
 	@Test
+	@WithMockUser(username="admin",roles={"USER","ADMIN"})
 	 void userAlredySignedUp() throws Exception{
 		
 		request = new MockHttpServletRequest(); // this is object that we can use to make mock servlet request and I can populate this request 
@@ -675,7 +710,7 @@ class QuestionAndAnswerAppApplicationTests {
 		
 
 //		// create a post using an HTTP request and post data to a mapping on our controller 
-		MvcResult mvcResult = this.mockMvc.perform(post("/signUp/save")
+		MvcResult mvcResult = this.mockMvc.perform(post("/register/save")
 				  .contentType(MediaType.APPLICATION_JSON)
 				  .param("firstName", request.getParameterValues("firstName"))
 				  .param("lastName", request.getParameterValues("lastName"))
@@ -688,8 +723,51 @@ class QuestionAndAnswerAppApplicationTests {
 		 ModelAndView mav = mvcResult.getModelAndView();
 		 
 		 // test to see
-		 ModelAndViewAssert.assertViewName(mav, "SignUp");
+		 ModelAndViewAssert.assertViewName(mav, "register");
 		
 	}
 
+	
+	@Test
+	@WithMockUser(username="admin",roles={"USER","ADMIN"})
+	 void showLoginFormHttpRequest() throws Exception{
+		
+
+		// Web related testing
+		 MvcResult mvcResult = this.mockMvc.perform(MockMvcRequestBuilders.get("/login"))
+	                .andExpect(status().isOk()).andReturn();
+		 
+		 // with MVC result i can get the results here to get the model and view
+		 ModelAndView mav = mvcResult.getModelAndView();
+		 
+		 // now I have the model and view we can perform some assets which is to test
+		 ModelAndViewAssert.assertViewName(mav, "login");
+		
+	}
+	
+	@Test
+	@WithMockUser(username="admin",roles={"USER","ADMIN"})
+	 void checkValidUsername() throws Exception{
+		
+		User user = this.userService.findByEmail("Mike@hotmail.com");
+		
+		assertEquals("Mike@hotmail.com", user.getEmail());
+		
+		CustomUserDetailsService customUserDetailsService = new CustomUserDetailsService(this.userRepository);
+	
+	UserDetails userdetails = customUserDetailsService.loadUserByUsername("Mike@hotmail.com");
+
+		assertNotNull(userdetails);
+	}
+	
+	@Test
+	@WithMockUser(username="admin",roles={"USER","ADMIN"})
+	 void checkInValidUsername() throws Exception{
+		
+		
+		CustomUserDetailsService customUserDetailsService = new CustomUserDetailsService(this.userRepository);
+
+
+		assertThrows(UsernameNotFoundException.class, () ->{customUserDetailsService.loadUserByUsername("Mike@test.com");});
+	}
 }

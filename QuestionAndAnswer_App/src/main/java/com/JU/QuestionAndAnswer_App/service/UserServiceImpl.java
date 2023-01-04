@@ -3,6 +3,7 @@ package com.JU.QuestionAndAnswer_App.service;
 import java.util.Arrays;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.JU.QuestionAndAnswer_App.dao.RoleRepository;
@@ -17,15 +18,17 @@ public class UserServiceImpl implements UserService {
 	
 private UserRepository userRepository;
 private RoleRepository roleRepository;
+private PasswordEncoder passwordEncoder;
 	
 	
 	public UserServiceImpl() {}
 	
 	@Autowired
-	public UserServiceImpl(UserRepository userRepository, RoleRepository roleRepository) { // injecting the dependency
+	public UserServiceImpl(UserRepository userRepository, RoleRepository roleRepository, PasswordEncoder passwordEncoder) { // injecting the dependency
 		
 		this.userRepository =  userRepository;
 		this.roleRepository =  roleRepository;
+		this.passwordEncoder = passwordEncoder;
 		
 	}
 
@@ -37,10 +40,10 @@ private RoleRepository roleRepository;
 		user.setEmail(signUpDto.getEmail());
 		
 		// use Spring security to encrypt the password
-		user.setPassword(signUpDto.getPassword());
+		user.setPassword(this.passwordEncoder.encode(signUpDto.getPassword()));
 		
 		//
-		Role role =  this.roleRepository.findByName("GUEST");
+		Role role =  this.roleRepository.findByName("ROLE_GUEST");
 		
 		user.setRoles(Arrays.asList(role));
 		

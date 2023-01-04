@@ -30,7 +30,7 @@ public class AuthenticationController {
 	}
 	
 	// direct to signUp view page
-	@GetMapping("/signUp")
+	@GetMapping("/register")
 	public String showSignUpForm(Model model) {
 		
 		// creating an on empty object that will hold user data when they enter their details
@@ -39,12 +39,12 @@ public class AuthenticationController {
 		//now let add empty object to model
 		model.addAttribute("user", user); 
 		
-		return "SignUp";
+		return "register";
 		
 	}
 	
 	// handle request of user SignUp Details
-	@PostMapping("/signUp/save")
+	@PostMapping("/register/save")
 	public String signUp(@Valid @ModelAttribute("user")SignUpDto signUpDto, 
 			BindingResult result, 
 			Model model) {
@@ -65,12 +65,19 @@ public class AuthenticationController {
 			//i'm passing the same model object of the user input when there is error
 			model.addAttribute("user", signUpDto);
 			
-			return "SignUp";
+			return "register";
 		}
 		
 		
 		this.userService.saveUser(signUpDto);
 		
-		return "redirect:/signUp?success";
+		return "redirect:/register?success";
 	}
+	
+	
+	// direct to Login view page
+	 @GetMapping("/login")
+	    public String loginPage(){
+	        return "login";
+	    }
 }
