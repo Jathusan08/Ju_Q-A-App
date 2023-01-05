@@ -50,7 +50,9 @@ public class WebSpringSecurity {
                    //         .requestMatchers("/comments").permitAll()
                    //         .requestMatchers("/comments/**").permitAll()
                             .requestMatchers(new AntPathRequestMatcher("/post/**")).permitAll()
-                        //    .requestMatchers(new AntPathRequestMatcher("/**/comments")).permitAll()
+                            .requestMatchers(new AntPathRequestMatcher("/**/comments")).permitAll()
+                            .requestMatchers(new AntPathRequestMatcher("/page/search")).permitAll()
+                   //         .requestMatchers(new AntPathRequestMatcher("/page/search)).permitAll()
                           .anyRequest().authenticated()
           ) 
           .formLogin( form -> form
