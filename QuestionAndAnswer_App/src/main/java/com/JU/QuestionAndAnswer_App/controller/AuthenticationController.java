@@ -29,6 +29,13 @@ public class AuthenticationController {
 		
 	}
 	
+	// direct to Login view page
+		 @GetMapping("/login")
+		    public String loginPage(){
+		        return "login";
+		        
+		    }
+	
 	// direct to signUp view page
 	@GetMapping("/register")
 	public String showSignUpForm(Model model) {
@@ -75,9 +82,4 @@ public class AuthenticationController {
 	}
 	
 	
-	// direct to Login view page
-	 @GetMapping("/login")
-	    public String loginPage(){
-	        return "login";
-	    }
 }

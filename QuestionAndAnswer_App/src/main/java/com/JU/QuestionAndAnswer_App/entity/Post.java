@@ -2,7 +2,7 @@ package com.JU.QuestionAndAnswer_App.entity;
 
 
 
-import org.hibernate.annotations.CreationTimestamp; 
+import org.hibernate.annotations.CreationTimestamp;   
 import org.hibernate.annotations.UpdateTimestamp;
 
 import jakarta.persistence.CascadeType;
@@ -11,6 +11,8 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 //import jakarta.persistence.Lob;
 import jakarta.persistence.Table;
@@ -63,6 +65,10 @@ public class Post {
 	@UpdateTimestamp // these are special annotations Hibernate will automatically manage the timestamps, 
 	//so there no need for the developer to manually call these method or set these fields here
 	private Date lastUpdated;
+	
+	@ManyToOne() // many posts belong to 1 user
+	@JoinColumn(name="created_by", nullable = false)
+	private User createdBy;
 	
 	@OneToMany(cascade = CascadeType.REMOVE, mappedBy = "post") // one post has many comments, mappedBY is variable name that it has foreign key and when a post is deleted then the comments will also be delted
 	private Set<Comment> comments = new HashSet<>();

@@ -44,7 +44,7 @@ private PasswordEncoder passwordEncoder;
 		
 		//
 		Role role =  this.roleRepository.findByName("ROLE_GUEST");
-		
+	//	Role role =  this.roleRepository.findByName("ROLE_ADMIN");
 		user.setRoles(Arrays.asList(role));
 		
 		// save the user data to the database
@@ -54,7 +54,7 @@ private PasswordEncoder passwordEncoder;
 
 	@Override
 	public User findByEmail(String email) {
-		// TODO Auto-generated method stub
+		
 		return this.userRepository.findByEmail(email);
 	}
 

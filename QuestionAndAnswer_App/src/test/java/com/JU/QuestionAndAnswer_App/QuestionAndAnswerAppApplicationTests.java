@@ -78,24 +78,59 @@ class QuestionAndAnswerAppApplicationTests {
 		
 
 		// insert sample data- we'll make use of JDBC template and execute JDBC operations
-	this.jdbc.execute("INSERT INTO posts (post_id, title, url, content, shortDescription, date_created)\n"
-			+ "VALUES (1, 'What is ARRAY1?', 'What is ARRAY2?', 'What is ARRAY3?', 'What is ARRAY4?', NOW())");
 	
 	
-	this.jdbc.execute("INSERT INTO posts (post_id,title, url, content, shortDescription, date_created)\n"
+	this.jdbc.execute("INSERT INTO _users (user_id, name, email, passwords)\n"
+			+ "VALUES (1, 'John', 'John@hotmail.com', 'test123')");
+
+	this.jdbc.execute("INSERT INTO _users (user_id, name, email, passwords)\n"
+			+ "VALUES (2, 'Mike', 'Mike@hotmail.com', 'test123')");
+	
+	this.jdbc.execute("INSERT INTO _users (user_id, name, email, passwords)\n"
+			+ "VALUES (3, 'David', 'David@hotmail.com', 'test123')");
+	
+	this.jdbc.execute("INSERT INTO _users (user_id, name, email, passwords)\n"
+			+ "VALUES (4, 'admin', 'admin@hotmail.com', 'admin')");
+
+	this.jdbc.execute("INSERT INTO _roles(role_id, name)\n"
+			+ "VALUES (1, 'ROLE_ADMIN')");
+	
+	this.jdbc.execute("INSERT INTO _roles(role_id, name)\n"
+			+ "VALUES (2, 'ROLE_GUEST')");
+	
+	this.jdbc.execute("INSERT INTO _roles(role_id, name)\n"
+			+ "VALUES (3, 'ROLE_MEMBER')");
+	
+	this.jdbc.execute("INSERT INTO _users_roles(user_id, role_id)\n"
+			+ "VALUES (1, 2)");
+	
+	this.jdbc.execute("INSERT INTO _users_roles(user_id, role_id)\n"
+			+ "VALUES (2, 2)");
+	
+	this.jdbc.execute("INSERT INTO _users_roles(user_id, role_id)\n"
+			+ "VALUES (3, 2)");
+	
+	this.jdbc.execute("INSERT INTO _users_roles(user_id, role_id)\n"
+			+ "VALUES (4, 1)");
+	
+	this.jdbc.execute("INSERT INTO posts (post_id, title, url, content, shortDescription, date_created, created_by)\n"
+			+ "VALUES (1, 'What is ARRAY1?', 'What is ARRAY2?', 'What is ARRAY3?', 'What is ARRAY4?', NOW(), 1)");
+	
+	
+	this.jdbc.execute("INSERT INTO posts (post_id,title, url, content, shortDescription, date_created, created_by)\n"
 			+ "VALUES (2, 'If Statement?', 'https://www.thinkautomation.com/eli5/a-beginners-guide-to-if-statements/', "
 			+ "'If statements are logical blocks used within programming. "
 			+ "They’re conditional statements that tell a computer what to do with certain information. "
 			+ "In other words, they let a program make decisions while it’s running.', "
-			+ "'need to refresh about If statement', NOW())");
+			+ "'need to refresh about If statement', NOW(), 2)");
 	
 	
-	this.jdbc.execute("INSERT INTO posts (post_id,title, url, content, shortDescription, date_created)\n"
+	this.jdbc.execute("INSERT INTO posts (post_id,title, url, content, shortDescription, date_created, created_by)\n"
 			+ "VALUES (3, 'Do you write your unit tests before or after coding a piece of functionality?', "
 			+ "'https://www.thinkautomation.com/eli5/a-beginners-guide-to-if-statements/', "
 			+ "'I was wondering when most people wrote their unit tests, if at all. I usually write tests after writing my "
 			+ "initial code to make sure it works like its supposed to. I then fix what is broken.', "
-			+ "'need to clarity about testing', NOW())");
+			+ "'need to clarity about testing', NOW(), 3)");
 	
 	
 	this.jdbc.execute("INSERT INTO comments (comment_id, name, email, content, date_created, post_id )\n"
@@ -112,34 +147,17 @@ class QuestionAndAnswerAppApplicationTests {
 			+ "that you can fix any issues earlier before the coding goes to the production', NOW(),3)");
 	
 	
-	this.jdbc.execute("INSERT INTO _users (user_id, name, email, passwords)\n"
-			+ "VALUES (1, 'John', 'John@hotmail.com', 'test123')");
-
-	
-	this.jdbc.execute("INSERT INTO _users (user_id, name, email, passwords)\n"
-			+ "VALUES (2, 'Mike', 'Mike@hotmail.com', 'test123')");
-	
-	this.jdbc.execute("INSERT INTO _users (user_id, name, email, passwords)\n"
-			+ "VALUES (3, 'David', 'David@hotmail.com', 'test123')");
-
-	this.jdbc.execute("INSERT INTO _roles(role_id, name)\n"
-			+ "VALUES (1, 'ROLE_ADMIN')");
-	
-	this.jdbc.execute("INSERT INTO _roles(role_id, name)\n"
-			+ "VALUES (2, 'ROLE_MEMBER')");
-	
-	this.jdbc.execute("INSERT INTO _roles(role_id, name)\n"
-			+ "VALUES (3, 'ROLE_GUEST')");
-	
 	}
 	
 	
 	@AfterEach
 	public void setupAfterTransaction() { 
 		// delete the sample data after each test so clean uo
+		
+		
+		 jdbc.execute("DELETE FROM _users_roles");
 		 jdbc.execute("DELETE FROM comments");
 		 jdbc.execute("DELETE FROM posts");
-		 jdbc.execute("DELETE FROM _users_roles");
 		 jdbc.execute("DELETE FROM _users");
 		 jdbc.execute("DELETE FROM _roles");
 		
@@ -160,7 +178,7 @@ class QuestionAndAnswerAppApplicationTests {
 	
 	
 	@Test
-	@WithMockUser(username="admin",roles={"USER","ADMIN"})
+	@WithMockUser(username="admin",roles={"GUEST","ADMIN"})
 	 void showAllPostsForAdminHttpRequest() throws Exception{
 		
 		// we should have 3 data on H2 Embeded database
@@ -179,8 +197,9 @@ class QuestionAndAnswerAppApplicationTests {
 		
 	}
 	
+
 	@Test
-	@WithMockUser(username="admin",roles={"USER","ADMIN"})
+	@WithMockUser(username="admin",roles={"GUEST","ADMIN"})
 	 void showPostFormForAdminHttpRequest() throws Exception {
 		
 		
@@ -199,7 +218,7 @@ class QuestionAndAnswerAppApplicationTests {
 	
 	
 	@Test
-	@WithMockUser(username="admin",roles={"USER","ADMIN"})
+	@WithMockUser(username="admin",roles={"GUEST","ADMIN"})
 	 void createInvalidPostForAdminHttpRequest() throws Exception {
 		
 		
@@ -232,7 +251,7 @@ class QuestionAndAnswerAppApplicationTests {
 	}
 	
 	@Test
-	@WithMockUser(username="admin",roles={"USER","ADMIN"})
+	@WithMockUser(username="admin@hotmail.com",roles={"GUEST","ADMIN"})
 	 void createValidPostForAdminHttpRequest() throws Exception {
 		
 		
@@ -245,6 +264,7 @@ class QuestionAndAnswerAppApplicationTests {
 		request.setParameter("shortDescription", "Programming Lanagauge");
 		request.setParameter("content", "I would like to know what Programming Lanagauge to learn for beginner?. Also can "
 				+ "you kinldy send me a resource where I can able to start with it?");
+		
 		
 
 //		// create a post using an HTTP request and post data to a mapping on our controller 
@@ -270,7 +290,7 @@ class QuestionAndAnswerAppApplicationTests {
 	}
 	
 	@Test
-	@WithMockUser(username="admin",roles={"USER","ADMIN"})
+	@WithMockUser(username="admin",roles={"GUEST","ADMIN"})
 	 void showEditPostFormForAdminHttpRequest() throws Exception {
 		
 		int i = 1;
@@ -294,7 +314,7 @@ class QuestionAndAnswerAppApplicationTests {
 	
 	
 	@Test
-	@WithMockUser(username="admin",roles={"USER","ADMIN"})
+	@WithMockUser(username="admin@hotmail.com",roles={"GUEST","ADMIN"})
 	 void editValidPostFormForAdminHttpRequest() throws Exception {
 		
 		int i = 1;
@@ -326,7 +346,7 @@ class QuestionAndAnswerAppApplicationTests {
 	}
 	
 	@Test
-	@WithMockUser(username="admin",roles={"USER","ADMIN"})
+	@WithMockUser(username="admin",roles={"GUEST","ADMIN"})
 	 void editInValidPostFormForAdminHttpRequest() throws Exception {
 		
 		int i = 1;
@@ -358,7 +378,7 @@ class QuestionAndAnswerAppApplicationTests {
 	}
 	
 	@Test
-	@WithMockUser(username="admin",roles={"USER","ADMIN"})
+	@WithMockUser(username="admin@hotmail.com",roles={"GUEST","ADMIN"})
 	 void updatePostFormForAdminHttpRequest() throws Exception {
 		
 		
@@ -384,7 +404,7 @@ class QuestionAndAnswerAppApplicationTests {
 	
 	
 	@Test 
-	@WithMockUser(username="admin",roles={"USER","ADMIN"})
+	@WithMockUser(username="admin",roles={"GUEST","ADMIN"})
 	 void deletePostFormForAdminHttpRequest() throws Exception {
 		
 		int i = 1;
@@ -408,7 +428,7 @@ class QuestionAndAnswerAppApplicationTests {
 	}
 	
 	@Test 
-	@WithMockUser(username="admin",roles={"USER","ADMIN"})
+	@WithMockUser(username="admin",roles={"GUEST","ADMIN"})
 	 void viewPostFormbyUrlForAdminHttpRequest() throws Exception {
 		
 		int i = 1;
@@ -434,7 +454,7 @@ class QuestionAndAnswerAppApplicationTests {
 	
 	
 	@Test 
-	@WithMockUser(username="admin",roles={"USER","ADMIN"})
+	@WithMockUser(username="admin",roles={"GUEST","ADMIN"})
 	 void searchPostFormForAdminHttpRequest() throws Exception {
 		
 		 MvcResult mvcResult = this.mockMvc.perform(MockMvcRequestBuilders.get("/admin/posts/search?query={query}","S"))
@@ -451,7 +471,7 @@ class QuestionAndAnswerAppApplicationTests {
 	
 	
 	@Test
-	@WithMockUser(username="admin",roles={"USER","ADMIN"})
+	@WithMockUser(username="admin",roles={"GUEST","ADMIN"})
 	 void showAllCommentsForAdminHttpRequest() throws Exception{
 		
 		// we should have 3 data on H2 Embeded database
@@ -471,15 +491,16 @@ class QuestionAndAnswerAppApplicationTests {
 	}
 	
 	@Test 
-	@WithMockUser(username="admin",roles={"USER","ADMIN"})
+	@WithMockUser(username="admin@hotmail.com",roles={"GUEST","ADMIN"})
 	 void deleteACommentForAdminHttpRequest() throws Exception {
 		
 		int i = 1;
 		Long id =Long.valueOf(i);
 		
+		assertEquals(3, this.commentService.findAllComments().size());
 		
 		// Delete the grade via HTTP request 
-		 MvcResult mvcResult = this.mockMvc.perform(MockMvcRequestBuilders.get("/admin/posts/comments/{commentId}/delete",id))
+		 MvcResult mvcResult = this.mockMvc.perform(MockMvcRequestBuilders.get("/admin/posts/comments/{commentId}",id))
 				 .andExpect(status().is3xxRedirection()).andReturn();
 		 
 		 // with MVC result i can get the results here to get the model and view
@@ -497,7 +518,7 @@ class QuestionAndAnswerAppApplicationTests {
 //////////////////////// CLIENT /////////////////////////////////////////	
 	
 	@Test
-	@WithMockUser(username="admin",roles={"USER","ADMIN"})
+	@WithMockUser(username="admin",roles={"GUEST","ADMIN"})
 	 void showAllQAPostsForClientHttpRequest() throws Exception{
 				
 		// Web related testing
@@ -516,7 +537,7 @@ class QuestionAndAnswerAppApplicationTests {
 	
 	
 	@Test 
-	@WithMockUser(username="admin",roles={"USER","ADMIN"})
+	@WithMockUser(username="admin",roles={"GUEST","ADMIN"})
 	 void searchQAPostFormForClientHttpRequest() throws Exception {
 		
 		 MvcResult mvcResult = this.mockMvc.perform(MockMvcRequestBuilders.get("/page/search?query={query}","S"))
@@ -532,7 +553,7 @@ class QuestionAndAnswerAppApplicationTests {
 	
 	
 	@Test 
-	@WithMockUser(username="admin",roles={"USER","ADMIN"})
+	@WithMockUser(username="admin",roles={"GUEST","ADMIN"})
 	 void viewQAPostFormbyUrlForClientHttpRequest() throws Exception {
 		
 		int i = 1;
@@ -552,7 +573,7 @@ class QuestionAndAnswerAppApplicationTests {
 	}
 	
 	@Test
-	@WithMockUser(username="admin",roles={"USER","ADMIN"})
+	@WithMockUser(username="admin",roles={"GUEST","ADMIN"})
 	 void createACommentforPostForClientHttpRequest() throws Exception {
 		
 		int i = 1;
@@ -578,7 +599,7 @@ class QuestionAndAnswerAppApplicationTests {
 	
 	
 	@Test
-	@WithMockUser(username="admin",roles={"USER","ADMIN"})
+	@WithMockUser(username="admin",roles={"GUEST","ADMIN"})
 	 void createAnInvalidCommentforPostForClientHttpRequest() throws Exception {
 		
 		int i = 1;
@@ -607,7 +628,7 @@ class QuestionAndAnswerAppApplicationTests {
 	
 	
 	@Test
-	@WithMockUser(username="admin",roles={"USER","ADMIN"})
+	@WithMockUser(username="admin",roles={"GUEST","ADMIN"})
 	 void showSignUpFormForClientHttpRequest() throws Exception{
 		
 		// we should have 3 data on H2 Embeded database
@@ -627,7 +648,7 @@ class QuestionAndAnswerAppApplicationTests {
 	}
 	
 	@Test
-	@WithMockUser(username="admin",roles={"USER","ADMIN"})
+	@WithMockUser(username="admin",roles={"GUEST","ADMIN"})
 	 void SignUpAnUserHttpRequest() throws Exception{
 		
 		request = new MockHttpServletRequest(); // this is object that we can use to make mock servlet request and I can populate this request 
@@ -661,7 +682,7 @@ class QuestionAndAnswerAppApplicationTests {
 
 	
 	@Test
-	@WithMockUser(username="admin",roles={"USER","ADMIN"})
+	@WithMockUser(username="admin",roles={"GUEST","ADMIN"})
 	 void invalidSignupFields() throws Exception{
 		
 		request = new MockHttpServletRequest(); // this is object that we can use to make mock servlet request and I can populate this request 
@@ -695,7 +716,7 @@ class QuestionAndAnswerAppApplicationTests {
 	
 	
 	@Test
-	@WithMockUser(username="admin",roles={"USER","ADMIN"})
+	@WithMockUser(username="admin",roles={"GUEST","ADMIN"})
 	 void userAlredySignedUp() throws Exception{
 		
 		request = new MockHttpServletRequest(); // this is object that we can use to make mock servlet request and I can populate this request 
@@ -729,7 +750,7 @@ class QuestionAndAnswerAppApplicationTests {
 
 	
 	@Test
-	@WithMockUser(username="admin",roles={"USER","ADMIN"})
+	@WithMockUser(username="admin",roles={"GUEST","ADMIN"})
 	 void showLoginFormHttpRequest() throws Exception{
 		
 
@@ -746,7 +767,7 @@ class QuestionAndAnswerAppApplicationTests {
 	}
 	
 	@Test
-	@WithMockUser(username="admin",roles={"USER","ADMIN"})
+	@WithMockUser(username="admin",roles={"GUEST","ADMIN"})
 	 void checkValidUsername() throws Exception{
 		
 		User user = this.userService.findByEmail("Mike@hotmail.com");
@@ -761,7 +782,7 @@ class QuestionAndAnswerAppApplicationTests {
 	}
 	
 	@Test
-	@WithMockUser(username="admin",roles={"USER","ADMIN"})
+	@WithMockUser(username="admin",roles={"GUEST","ADMIN"})
 	 void checkInValidUsername() throws Exception{
 		
 		
@@ -770,4 +791,46 @@ class QuestionAndAnswerAppApplicationTests {
 
 		assertThrows(UsernameNotFoundException.class, () ->{customUserDetailsService.loadUserByUsername("Mike@test.com");});
 	}
+	
+	@Test
+	@WithMockUser(username="David@hotmail.com",roles={"GUEST"})
+	 void showPostsMadeByClientHttpRequest() throws Exception{
+		
+		// we should have 3 data on H2 Embeded database
+		
+		assertEquals(3, this.postService.getAllPosts().size());	
+		
+		// Web related testing
+		 MvcResult mvcResult = this.mockMvc.perform(MockMvcRequestBuilders.get("/admin/posts"))
+	                .andExpect(status().isOk()).andReturn();
+		 
+		 // with MVC result i can get the results here to get the model and view
+		 ModelAndView mav = mvcResult.getModelAndView();
+		 
+		 // now I have the model and view we can perform some assets which is to test
+		 ModelAndViewAssert.assertViewName(mav, "Admin/Posts_For_Admin");
+		
+	}
+	
+	@Test
+	@WithMockUser(username="David@hotmail.com",roles={"GUEST"})
+	 void showAllCommentsForClientHttpRequest() throws Exception{
+		
+		// we should have 3 data on H2 Embeded database
+		
+		assertEquals(3, this.commentService.findAllComments().size());	
+		
+		// Web related testing
+		 MvcResult mvcResult = this.mockMvc.perform(MockMvcRequestBuilders.get("/admin/posts/comments"))
+	                .andExpect(status().isOk()).andReturn();
+		 
+		 // with MVC result i can get the results here to get the model and view
+		 ModelAndView mav = mvcResult.getModelAndView();
+		 
+		 // now I have the model and view we can perform some assets which is to test
+		 ModelAndViewAssert.assertViewName(mav, "Admin/View_comments_For_Admin");
+		
+	}
+	
+	
 }

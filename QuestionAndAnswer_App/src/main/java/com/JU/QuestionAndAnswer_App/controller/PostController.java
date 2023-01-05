@@ -1,5 +1,6 @@
 package com.JU.QuestionAndAnswer_App.controller;
 
+
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;  
@@ -16,6 +17,7 @@ import com.JU.QuestionAndAnswer_App.dto.CommentDto;
 import com.JU.QuestionAndAnswer_App.dto.PostDto;
 import com.JU.QuestionAndAnswer_App.service.CommentService;
 import com.JU.QuestionAndAnswer_App.service.PostService;
+import com.JU.QuestionAndAnswer_App.util.SecurityUtils;
 
 import jakarta.validation.Valid;
 
@@ -40,8 +42,27 @@ public PostController(PostService postService, CommentService commentService) {
 	@GetMapping("/admin/posts")
 	public String showAllQAPosts(Model model) {
 		
+		
+	// get the logged in  user
+		String role = SecurityUtils.getRole();
+		
+		List<PostDto> posts =null;
+		
+		if(role.equals("ROLE_ADMIN")) {
+			
+			posts = this.postService.getAllPosts();
+			
+		}
+		
+		else {
+			
+			posts = this.postService.findPostsByUser();
+			
+		}
+		
 		// get the list of posts and add to the model so we can use that attribute to populate the data
-		model.addAttribute("post", this.postService.getAllPosts());
+		//model.addAttribute("post", this.postService.getAllPosts());
+		model.addAttribute("post",posts );
 		
 	
 		
@@ -76,7 +97,7 @@ public PostController(PostService postService, CommentService commentService) {
 				
 				// if there is any errors then hasErrors() based on the validation annotation I set up on my PostDto class
 				
-				System.out.println("postDto " + postDto.getShortDescription());
+			//	System.out.println("postDto " + postDto.getShortDescription());
 				
 				//i'm passing the same model object of the user input when there is error
 				model.addAttribute("post", postDto);
@@ -106,7 +127,7 @@ public PostController(PostService postService, CommentService commentService) {
 		
 		model.addAttribute("post", postDto);
 		
-		System.out.println("POSTDT " + postDto);
+		//System.out.println("POSTDT " + postDto);
 		
 		return "Admin/Edit_post_For_Admin";
 		
@@ -200,7 +221,26 @@ public PostController(PostService postService, CommentService commentService) {
 		@GetMapping("/admin/posts/comments")
 		public String QAPostComments(Model model) {
 			
-			List<CommentDto> commentDto  = this.commentService.findAllComments();
+			
+			// get the logged in  user
+			String role = SecurityUtils.getRole();
+			
+			List<CommentDto> commentDto =null ;
+	
+			
+			if(role.equals("ROLE_ADMIN")) {
+				
+				commentDto  = this.commentService.findAllComments();
+				
+			}
+			
+			else {
+				
+				commentDto  = this.commentService.findCommentsByPost();
+				
+			}
+			
+				
 			
 			model.addAttribute("comments", commentDto);
 			
@@ -208,8 +248,8 @@ public PostController(PostService postService, CommentService commentService) {
 		}
 		
 		
-		// direct to edit  post
-		@GetMapping("/admin/posts/comments/{commentId}/delete")
+		// direct to delete  comment from post
+		@GetMapping("/admin/posts/comments/{commentId}")
 		public String deleteCommentFromQAPost(@PathVariable("commentId") Long commentId) {
 					
 				// delete  a comment
