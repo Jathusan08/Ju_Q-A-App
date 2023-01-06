@@ -1,6 +1,6 @@
 package com.JU.QuestionAndAnswer_App.entity;
 
-import java.util.Date;
+import java.util.Date; 
 
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
@@ -55,7 +55,6 @@ public class Comment {
 	@ManyToOne() // many commments belont to 1 post
 	@JoinColumn(name="post_id", nullable = false)
 	private Post post;
-
 
 
 }

@@ -2,7 +2,7 @@ package com.JU.QuestionAndAnswer_App.entity;
 
 
 
-import org.hibernate.annotations.CreationTimestamp;   
+import org.hibernate.annotations.CreationTimestamp;    
 import org.hibernate.annotations.UpdateTimestamp;
 
 import jakarta.persistence.CascadeType;
@@ -14,7 +14,6 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
-//import jakarta.persistence.Lob;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -72,4 +71,5 @@ public class Post {
 	
 	@OneToMany(cascade = CascadeType.REMOVE, mappedBy = "post") // one post has many comments, mappedBY is variable name that it has foreign key and when a post is deleted then the comments will also be delted
 	private Set<Comment> comments = new HashSet<>();
+	
 }

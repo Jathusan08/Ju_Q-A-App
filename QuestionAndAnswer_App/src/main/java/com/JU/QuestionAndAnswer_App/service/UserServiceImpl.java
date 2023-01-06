@@ -1,6 +1,6 @@
 package com.JU.QuestionAndAnswer_App.service;
 
-import java.util.Arrays;
+import java.util.Arrays; 
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -42,7 +42,7 @@ private PasswordEncoder passwordEncoder;
 		// use Spring security to encrypt the password
 		user.setPassword(this.passwordEncoder.encode(signUpDto.getPassword()));
 		
-		//
+	
 		Role role =  this.roleRepository.findByName("ROLE_GUEST");
 	//	Role role =  this.roleRepository.findByName("ROLE_ADMIN");
 		user.setRoles(Arrays.asList(role));

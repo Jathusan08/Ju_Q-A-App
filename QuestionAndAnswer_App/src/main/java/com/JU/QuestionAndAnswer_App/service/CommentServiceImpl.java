@@ -1,6 +1,6 @@
 package com.JU.QuestionAndAnswer_App.service;
 
-import java.util.ArrayList;  
+import java.util.ArrayList;   
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,7 +10,6 @@ import com.JU.QuestionAndAnswer_App.dao.CommentRepository;
 import com.JU.QuestionAndAnswer_App.dao.PostRepository;
 import com.JU.QuestionAndAnswer_App.dao.UserRepository;
 import com.JU.QuestionAndAnswer_App.dto.CommentDto;
-import com.JU.QuestionAndAnswer_App.dto.PostDto;
 import com.JU.QuestionAndAnswer_App.entity.Comment;
 import com.JU.QuestionAndAnswer_App.entity.Post;
 import com.JU.QuestionAndAnswer_App.entity.User;
@@ -104,7 +103,6 @@ public class CommentServiceImpl implements CommentService {
 		
 		return commentDtos;
 	}
-
 
 
 }

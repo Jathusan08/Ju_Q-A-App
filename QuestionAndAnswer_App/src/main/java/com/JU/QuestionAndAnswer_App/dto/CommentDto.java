@@ -1,17 +1,12 @@
 package com.JU.QuestionAndAnswer_App.dto;
 
-import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.Date; 
 
-import com.JU.QuestionAndAnswer_App.entity.Comment;
-import com.JU.QuestionAndAnswer_App.entity.Post;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotEmpty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -40,5 +35,4 @@ public class CommentDto {
 	private Date lastUpdated;
 
 	
-
 }

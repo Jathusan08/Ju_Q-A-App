@@ -1,7 +1,7 @@
 package com.JU.QuestionAndAnswer_App.dto;
  
 
-import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.Email; 
 import jakarta.validation.constraints.NotEmpty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -30,4 +30,5 @@ public class SignUpDto {
 	
 	@NotEmpty(message="Password should not be empty") // Validation
 	private String password;
+	
 }

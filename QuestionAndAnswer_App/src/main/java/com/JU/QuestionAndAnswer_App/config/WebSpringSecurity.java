@@ -3,7 +3,6 @@ package com.JU.QuestionAndAnswer_App.config;
 import org.springframework.beans.factory.annotation.Autowired;  
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -26,14 +25,17 @@ public class WebSpringSecurity {
 	public WebSpringSecurity(UserDetailsService userDetailsService) {
 	
 		this.userDetailsService = userDetailsService;
+		
 	}
 
 	@Bean
 	public static  PasswordEncoder passwordEncoder() {
 		
 		return new BCryptPasswordEncoder();
+		
 	}
 
+	
 	// define security filer chain bean
 	@Bean
 	public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -65,27 +67,16 @@ public class WebSpringSecurity {
           );
   return http.build();
 		
-	  
-		
-		
-		
-//		
+	  	
 	}
 	
 	
 	@Autowired
 	public void configureGlobal(AuthenticationManagerBuilder builder) throws Exception {
-		
-		
+				
 		builder.userDetailsService(this.userDetailsService).passwordEncoder(passwordEncoder());
-		
-		
 		
 	}
 	
-	
-	
-	
-	
-	
+
 }

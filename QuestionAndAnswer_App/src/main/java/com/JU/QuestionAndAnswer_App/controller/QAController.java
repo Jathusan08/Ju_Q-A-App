@@ -1,6 +1,6 @@
 package com.JU.QuestionAndAnswer_App.controller;
 
-import java.util.List;
+import java.util.List; 
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -40,6 +40,7 @@ public class QAController {
 		return "QA/QA_Post_For_Client";
 	}
 	
+	
 	// direct to view specific QA POST by POST URL
 	@GetMapping("/post/{postUrl}")
 	public String viewQAPost(@PathVariable("postUrl") String postUrl, Model model) {
@@ -58,6 +59,7 @@ public class QAController {
 		return "QA/View_post_For_Client";
 		
 	}
+	
 	
 	// direct to search QA Post
 	// // localhost:8080/post/search?query=java

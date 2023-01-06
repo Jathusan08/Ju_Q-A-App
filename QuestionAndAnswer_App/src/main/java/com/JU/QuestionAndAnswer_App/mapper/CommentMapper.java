@@ -1,6 +1,6 @@
 package com.JU.QuestionAndAnswer_App.mapper;
 
-import com.JU.QuestionAndAnswer_App.dto.CommentDto;
+import com.JU.QuestionAndAnswer_App.dto.CommentDto; 
 import com.JU.QuestionAndAnswer_App.entity.Comment;
 
 public class CommentMapper {

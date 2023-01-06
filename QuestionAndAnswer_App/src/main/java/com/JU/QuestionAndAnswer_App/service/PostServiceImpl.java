@@ -1,8 +1,7 @@
 package com.JU.QuestionAndAnswer_App.service;
 
-import java.util.ArrayList; 
+import java.util.ArrayList;  
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -106,9 +105,8 @@ public class PostServiceImpl implements PostService {
 		// now delete
 		this.postRepository.deleteById(postId);
 		
-	
-		
 	}
+	
 
 	@Override
 	public PostDto findPostByUrl(String postUrl) {
@@ -119,10 +117,11 @@ public class PostServiceImpl implements PostService {
 		return PostMapper.mapToPostDto(post);
 		
 	}
+	
 
 	@Override
 	public List<PostDto> searchPosts(String query) {
-		// TODO Auto-generated method stub
+
 		List<Post> posts = this.postRepository.searchPosts(query);
 		
 		List<PostDto> postDtos = new ArrayList<>();
@@ -135,6 +134,7 @@ public class PostServiceImpl implements PostService {
 		return postDtos;
 	}
 
+	
 	@Override
 	public List<PostDto> findPostsByUser() {
 		

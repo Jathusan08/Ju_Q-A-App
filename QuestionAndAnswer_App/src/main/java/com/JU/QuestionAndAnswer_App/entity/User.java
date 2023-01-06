@@ -2,7 +2,7 @@ package com.JU.QuestionAndAnswer_App.entity;
 
 
 
-import java.util.ArrayList;  
+import java.util.ArrayList;   
 import java.util.List;
 
 import jakarta.persistence.JoinColumn;
